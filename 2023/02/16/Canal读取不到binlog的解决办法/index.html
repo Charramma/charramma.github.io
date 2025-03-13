@@ -19,22 +19,23 @@
   <meta name="author" content="Charramma">
   <meta name="keywords" content="">
   
-    <meta name="description" content="关于人生可能会遇见的问题人活一世，总能遇到些问题。我将这些问题大致分为两类。 一类是潜在问题，即尚未显现，但可以通过某些迹象预见到将来可能发生的问题。如长期不良的饮食习惯，或者熬夜等行为，虽然暂时没有对生活造成什么影响，但是日积月累会造成健康问题，可能会带来严重的后果。 另一类是我称之为显性问题，即已经出现在我们面前，对生活直接造成影响的问题。这里我认为显性问题也可以进行分类讨论。可分为能自行消解">
+    <meta name="description" content="本文首发于博客园：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;CharrammaBlog&#x2F;p&#x2F;17127049.html             Canal读取不到binlog的解决办法最近带了个新人，给了他一套新部署还没正式上线的环境让他负责运维，今天测试的同事在在群里说MQ消息推送不过去了。 我帮着排查一下，按我的经验，通常是Canal的问题，于是我瞅了眼Cana">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于人生可能会遇见的问题">
-<meta property="og:url" content="http://example.com/2025/03/11/%E5%85%B3%E4%BA%8E%E4%BA%BA%E7%94%9F%E5%8F%AF%E8%83%BD%E4%BC%9A%E9%81%87%E8%A7%81%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:title" content="Canal读取不到binlog的解决办法">
+<meta property="og:url" content="http://example.com/2023/02/16/Canal%E8%AF%BB%E5%8F%96%E4%B8%8D%E5%88%B0binlog%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/index.html">
 <meta property="og:site_name" content="Charramma的赛博自留地">
-<meta property="og:description" content="关于人生可能会遇见的问题人活一世，总能遇到些问题。我将这些问题大致分为两类。 一类是潜在问题，即尚未显现，但可以通过某些迹象预见到将来可能发生的问题。如长期不良的饮食习惯，或者熬夜等行为，虽然暂时没有对生活造成什么影响，但是日积月累会造成健康问题，可能会带来严重的后果。 另一类是我称之为显性问题，即已经出现在我们面前，对生活直接造成影响的问题。这里我认为显性问题也可以进行分类讨论。可分为能自行消解">
+<meta property="og:description" content="本文首发于博客园：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;CharrammaBlog&#x2F;p&#x2F;17127049.html             Canal读取不到binlog的解决办法最近带了个新人，给了他一套新部署还没正式上线的环境让他负责运维，今天测试的同事在在群里说MQ消息推送不过去了。 我帮着排查一下，按我的经验，通常是Canal的问题，于是我瞅了眼Cana">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-03-11T12:36:24.000Z">
-<meta property="article:modified_time" content="2025-03-12T02:44:22.935Z">
+<meta property="article:published_time" content="2023-02-16T07:55:00.000Z">
+<meta property="article:modified_time" content="2025-03-13T06:45:01.392Z">
 <meta property="article:author" content="Charramma">
-<meta property="article:tag" content="杂谈">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="canal">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>关于人生可能会遇见的问题 - Charramma的赛博自留地</title>
+  <title>Canal读取不到binlog的解决办法 - Charramma的赛博自留地</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -212,7 +213,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="关于人生可能会遇见的问题"></span>
+            <span id="subtitle" data-typed-text="Canal读取不到binlog的解决办法"></span>
           
         </div>
 
@@ -223,8 +224,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-11 20:36" pubdate>
-          2025年3月11日 晚上
+        <time datetime="2023-02-16 15:55" pubdate>
+          2023年2月16日 下午
         </time>
       </span>
     
@@ -235,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          616 字
         
       </span>
     
@@ -246,7 +247,7 @@
         
         
         
-          11 分钟
+          6 分钟
         
       </span>
     
@@ -283,68 +284,35 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">关于人生可能会遇见的问题</h1>
+            <h1 id="seo-header">Canal读取不到binlog的解决办法</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="关于人生可能会遇见的问题"><a href="#关于人生可能会遇见的问题" class="headerlink" title="关于人生可能会遇见的问题"></a>关于人生可能会遇见的问题</h1><p>人活一世，总能遇到些问题。我将这些问题大致分为两类。</p>
-<p>一类是潜在问题，即尚未显现，但可以通过某些迹象预见到将来可能发生的问题。如长期不良的饮食习惯，或者熬夜等行为，虽然暂时没有对生活造成什么影响，但是日积月累会造成健康问题，可能会带来严重的后果。</p>
-<p>另一类是我称之为显性问题，即已经出现在我们面前，对生活直接造成影响的问题。这里我认为显性问题也可以进行分类讨论。可分为能自行消解的问题和需要积极解决的问题。能自行消解的问题就是对你造成了影响，但即使你不去主动解决，它也会自己消失。而另外一种显性问题，如果你不积极面对，主动去解决它，它会一直存在，甚至会扩大影响，长期对你造成影响。</p>
-<p>下面进行分别讨论。</p>
-<h2 id="一、潜在问题"><a href="#一、潜在问题" class="headerlink" title="一、潜在问题"></a>一、潜在问题</h2><p>这里列举一些潜在问题的案例：</p>
-<ul>
-<li>年轻人的不良生活习惯，如暴饮暴食、作息不规律，可能导致肥胖、高血压等健康问题。</li>
-<li>职场人士忽视技能更新，当面临职业转型时，发现自己缺乏竞争力。</li>
-<li>金融机构过度发放次级贷款，在市场繁荣时期看似无害，但经济形势恶化时可能引发连锁反应。</li>
-</ul>
-<p>最好的做法是，在潜在问题还没有转化为显性问题时就将其解决，或者事先做好准备，等潜在问题暴露的时候，也能游刃有余地面对。</p>
-<p>以下是一些应对方法：</p>
-<ol>
-<li>增长见识：多读书、多旅行，开阔视野，提高对潜在风险的敏感度。</li>
-<li>持续学习：不断更新自己的知识和技能，保持竞争力。</li>
-<li>拓展人脉：建立广泛的人际关系网，增加社会支持。</li>
-<li>自我反省：定期审视自己的行为和决策，提前发现潜在风险。</li>
-<li>提高观察力：培养敏锐的洞察力，预见未来可能出现的问题。</li>
-<li>制定预案：提前准备好应对突发情况的计划，减少损失。</li>
-<li>反思总结：从每次经历中吸取教训，避免重蹈覆辙。</li>
-<li>关注心理健康：保持积极乐观的心态，有效管理压力。</li>
-</ol>
-<h2 id="二、显性问题"><a href="#二、显性问题" class="headerlink" title="二、显性问题"></a>二、显性问题</h2><p>之前提到过，我将显性问题分为能自行消解的问题和需要积极解决的问题。</p>
-<p>举一些例子。能自行消解的问题，如：</p>
-<ul>
-<li>吃东西吃撑了，导致胃很不舒服，消化一段时间后，胃就不再像之前一样难受。</li>
-<li>下雨了，但是没带伞，等到雨停了，你又能继续行程。</li>
-</ul>
-<p>需要积极解决的问题的案例：</p>
-<ul>
-<li>经济不景气导致的企业裁员，许多人在失业后长时间找不到工作，生活陷入困境。</li>
-<li>上级分配的紧急且复杂的任务，给员工带来巨大的心理压力。</li>
-<li>牙痛影响日常饮食和睡眠质量。</li>
-</ul>
-<p>当人们直观地感知到问题的存在时，很可能会产生如下的情绪或行为：</p>
-<ul>
-<li>后悔：总是想如果当初做了不同的选择就好了。</li>
-<li>自我贬低：认为自己能力不足或运气不佳。</li>
-<li>焦虑：对未来充满担忧，急于找到解决方案。</li>
-<li>愤怒：对自我或他人的不满，甚至产生攻击行为。</li>
-<li>沮丧：对解决问题失去信心，陷入绝望。</li>
-<li>嫉妒：羡慕那些似乎没有遇到同样问题的人。</li>
-<li>逃避：不愿意面对问题，选择回避。</li>
-<li>自我封闭：切断与外界的联系，独自承受痛苦。</li>
-</ul>
-<p>一个很明显的事实是：<u><strong>以上的消极情绪，对问题的解决没有任何帮助！</strong></u>甚至可能导致问题的加剧。焦虑会影响思考，愤怒会产生矛盾，自我贬低和沮丧绝望会影响心理健康。你沉浸在消极情绪中无法自拔，但问题依旧存在。</p>
-<p>那么，该如何以正确的方式应对这些显性问题，我认为有如下的方式：</p>
-<ol>
-<li>保持冷静：冷静的头脑有助于理性分析问题，找到解决办法。</li>
-<li>保持积极：相信自己有能力克服困难，保持乐观的心态。</li>
-<li>正视问题：承认问题的存在，不逃避，勇敢面对。</li>
-<li>深入分析：全面、客观地分析问题的根源，制定有效的解决方案。</li>
-<li>问题拆解：将复杂的问题分解成若干个小问题，逐一解决。</li>
-<li>寻求帮助：利用团队的力量，共同解决问题。</li>
-<li>接受现实：对于超出个人控制范围的问题，学会放手，专注于自己能够改变的部分。</li>
-</ol>
-<p>以上即为我个人对人生可能遇见的问题的看法。</p>
+                <div class="note note-info">
+            <p>本文首发于博客园：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/CharrammaBlog/p/17127049.html">https://www.cnblogs.com/CharrammaBlog/p/17127049.html</a></p>
+          </div>
+
+<h1 id="Canal读取不到binlog的解决办法"><a href="#Canal读取不到binlog的解决办法" class="headerlink" title="Canal读取不到binlog的解决办法"></a>Canal读取不到binlog的解决办法</h1><p>最近带了个新人，给了他一套新部署还没正式上线的环境让他负责运维，今天测试的同事在在群里说MQ消息推送不过去了。</p>
+<p>我帮着排查一下，按我的经验，通常是Canal的问题，于是我瞅了眼Canal的日志，果然报错了。<br>关键的错误就是这一句：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">java.io.IOException: Received error packet: errno = <span class="hljs-number">1236</span>, sqlstate = HY000 errmsg = Could not <span class="hljs-keyword">find</span> <span class="hljs-keyword">first</span> <span class="hljs-built_in">log</span> <span class="hljs-keyword">file</span> name in binary <span class="hljs-built_in">log</span> <span class="hljs-built_in">index</span> <span class="hljs-keyword">file</span><br></code></pre></td></tr></table></figure>
+
+<p>这是说读取不到binlog了。</p>
+<p>按日志里的信息，该Topic在读取的binlog和位点分别是mysql-bin.000010和984601。</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs clojure">&#123;<span class="hljs-string">&quot;identity&quot;</span>:&#123;<span class="hljs-string">&quot;slaveId&quot;</span><span class="hljs-symbol">:-1</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;sourceAddress&quot;</span>:&#123;<span class="hljs-string">&quot;address&quot;</span>:<span class="hljs-string">&quot;mid1&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;port&quot;</span>:<span class="hljs-number">3306</span>&#125;&#125;<span class="hljs-punctuation">,</span><span class="hljs-string">&quot;postion&quot;</span>:&#123;<span class="hljs-string">&quot;included&quot;</span><span class="hljs-symbol">:false</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;journalName&quot;</span>:<span class="hljs-string">&quot;mysql-bin.000010&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;position&quot;</span>:<span class="hljs-number">984601</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;serverId&quot;</span>:<span class="hljs-number">3232238851</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;timestamp&quot;</span>:<span class="hljs-number">1676468225000</span>&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我连上对应的MySQL，查看binlog，好家伙，变成mysql-bin.000001了！！！我第一反应，这小子不会是重装MySQL了吧。一问，他说他昨天发现MySQL的binlog有重复的（没懂是什么意思），然后他执行了<code>reset master;</code></p>
+<p>我。。。。</p>
+<p>他又说他修改了Topic配置文件的<code>canal.instance.master.journal.name</code>和<code>canal.instance.master.position</code>配置项，把binlog和位点修改为现有的，但是重启Canal后没有生效。</p>
+<p>这个问题在我刚接触Canal的时候也遇到过，修改配置文件中的binlog和位点，重启后发现Canal还在读以前的binlog和位点。这是因为Topic配置文件中的位点只是创建Topic时用于定位的，之后binlog的读取进度都记录在Zookeeper中，不再从配置文件中获取。所以Canal读取不到binlog的问题可以通过修改Zookeeper的Canal的信息来解决。</p>
+<p>解决步骤如下：</p>
+<p>先连接Zookeeper客户端</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/zookeeper/</span>bin/zkCli.sh -server localhost:<span class="hljs-number">2181</span><br></code></pre></td></tr></table></figure>
+
+<p>然后修改对应的canal信息</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-meta"># 查看现有canal位点信息</span><br>[<span class="hljs-meta">zk: localhost:2181(CONNECTED) 13</span>] <span class="hljs-keyword">get</span> /otter/canal/destinations/segi_pub/parse<br>&#123;<span class="hljs-string">&quot;identity&quot;</span>:&#123;<span class="hljs-string">&quot;slaveId&quot;</span>:<span class="hljs-number">-1</span>,<span class="hljs-string">&quot;sourceAddress&quot;</span>:&#123;<span class="hljs-string">&quot;address&quot;</span>:<span class="hljs-string">&quot;mid1&quot;</span>,<span class="hljs-string">&quot;port&quot;</span>:<span class="hljs-number">3306</span>&#125;&#125;,<span class="hljs-string">&quot;postion&quot;</span>:&#123;<span class="hljs-string">&quot;included&quot;</span>:<span class="hljs-literal">false</span>,<span class="hljs-string">&quot;journalName&quot;</span>:<span class="hljs-string">&quot;mysql-bin.000001&quot;</span>,<span class="hljs-string">&quot;position&quot;</span>:<span class="hljs-number">207621226</span>,<span class="hljs-string">&quot;serverId&quot;</span>:<span class="hljs-number">3232238851</span>,<span class="hljs-string">&quot;timestamp&quot;</span>:<span class="hljs-number">1676529084000</span>&#125;&#125;<br><br><span class="hljs-meta"># 修改</span><br>[<span class="hljs-meta">zk: localhost:2181(CONNECTED) 14</span>] <span class="hljs-keyword">set</span> /otter/canal/destinations/segi_pub/parse &#123;<span class="hljs-string">&quot;identity&quot;</span>:&#123;<span class="hljs-string">&quot;slaveId&quot;</span>:<span class="hljs-number">-1</span>,<span class="hljs-string">&quot;sourceAddress&quot;</span>:&#123;<span class="hljs-string">&quot;address&quot;</span>:<span class="hljs-string">&quot;mid1&quot;</span>,<span class="hljs-string">&quot;port&quot;</span>:<span class="hljs-number">3306</span>&#125;&#125;,<span class="hljs-string">&quot;postion&quot;</span>:&#123;<span class="hljs-string">&quot;included&quot;</span>:<span class="hljs-literal">false</span>,<span class="hljs-string">&quot;journalName&quot;</span>:<span class="hljs-string">&quot;mysql-bin.000001&quot;</span>,<span class="hljs-string">&quot;position&quot;</span>:<span class="hljs-number">207621</span>,<span class="hljs-string">&quot;serverId&quot;</span>:<span class="hljs-number">3232238851</span>,<span class="hljs-string">&quot;timestamp&quot;</span>:<span class="hljs-number">1676529084000</span>&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>最后重启canal。</p>
 
                 
               </div>
@@ -363,8 +331,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%9D%82%E8%B0%88/" class="category-chain-item">杂谈</a>
+  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E8%BF%90%E7%BB%B4/canal/" class="category-chain-item">canal</a>
+  
+  
+
   
 
       </span>
@@ -378,7 +353,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E6%9D%82%E8%B0%88/" class="print-no-link">#杂谈</a>
+        <a href="/tags/%E8%BF%90%E7%BB%B4/" class="print-no-link">#运维</a>
+      
+        <a href="/tags/canal/" class="print-no-link">#canal</a>
       
     </div>
   
@@ -392,15 +369,15 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2023/08/24/Kubernetes%E6%9B%B4%E6%96%B0%E8%AF%81%E4%B9%A6/" title="Kubernetes更新证书">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes更新证书</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/2023/08/24/Kubernetes%E6%9B%B4%E6%96%B0%E8%AF%81%E4%B9%A6/" title="Kubernetes更新证书">
-                        <span class="hidden-mobile">Kubernetes更新证书</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>

@@ -28,5 +28,59 @@
   
   
   
+  <entry>
+    <title>Kubernetes更新证书</title>
+    <link href="/2023/08/24/Kubernetes%E6%9B%B4%E6%96%B0%E8%AF%81%E4%B9%A6/"/>
+    <url>/2023/08/24/Kubernetes%E6%9B%B4%E6%96%B0%E8%AF%81%E4%B9%A6/</url>
+    
+    <content type="html"><![CDATA[<div class="note note-info">            <p>本文首发于博客园：<a href="https://www.cnblogs.com/CharrammaBlog/p/17653321.html">https://www.cnblogs.com/CharrammaBlog/p/17653321.html</a></p>          </div><h1 id="Kubernetes更新证书"><a href="#Kubernetes更新证书" class="headerlink" title="Kubernetes更新证书"></a>Kubernetes更新证书</h1><p>执行kubectl命令时，报<code>error: You must be logged in to the server (Unauthorized)</code>错误。<br>这是因为Kubernetes证书过期了。</p><p>可以使用如下命令查看证书有效时间</p><figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs smali"><span class="hljs-comment"># 1.19及以下版本的Kubernetes</span><br>kubeadm alpha certs<span class="hljs-built_in"> check-expiration</span><br><span class="hljs-built_in"></span><br><span class="hljs-comment"># 1.20及以上版本的Kubernetes</span><br>kubeadm certs check-expiration<br></code></pre></td></tr></table></figure><p>更新证书</p><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># &lt;= 1.19</span><br><span class="hljs-attribute">kubeadm</span> alpha certs renew <span class="hljs-literal">all</span><br><br><span class="hljs-comment"># &gt;= 1.20</span><br><span class="hljs-attribute">kubeadm</span> certs renew <span class="hljs-literal">all</span><br></code></pre></td></tr></table></figure><p>更新证书完成后，重启kubernetes组件</p><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs coq">docker ps |<span class="hljs-type">grep</span> -E &#x27;k8s_kube-apiserver|<span class="hljs-type">k8s_kube</span>-controller-manager|<span class="hljs-type">k8s_kube</span>-scheduler|<span class="hljs-type">k8s_etcd_etcd</span>&#x27; | <span class="hljs-type">awk</span> -F &#x27; &#x27; &#x27;&#123;print $<span class="hljs-number">1</span>&#125;&#x27; | <span class="hljs-type">xargs</span> docker restart<br><br>systemctl restart kubelet<br></code></pre></td></tr></table></figure><p>更新kubectl控制文件</p><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mel">mv /root/.kube/config /root/.kube/config-$(<span class="hljs-keyword">date</span> +%Y%m%d%H%M%S)<br>cp /etc/kubernetes/admin.conf /root/.kube/config<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>kubernetes</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>kubernetes</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Canal读取不到binlog的解决办法</title>
+    <link href="/2023/02/16/Canal%E8%AF%BB%E5%8F%96%E4%B8%8D%E5%88%B0binlog%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"/>
+    <url>/2023/02/16/Canal%E8%AF%BB%E5%8F%96%E4%B8%8D%E5%88%B0binlog%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[<div class="note note-info">            <p>本文首发于博客园：<a href="https://www.cnblogs.com/CharrammaBlog/p/17127049.html">https://www.cnblogs.com/CharrammaBlog/p/17127049.html</a></p>          </div><h1 id="Canal读取不到binlog的解决办法"><a href="#Canal读取不到binlog的解决办法" class="headerlink" title="Canal读取不到binlog的解决办法"></a>Canal读取不到binlog的解决办法</h1><p>最近带了个新人，给了他一套新部署还没正式上线的环境让他负责运维，今天测试的同事在在群里说MQ消息推送不过去了。</p><p>我帮着排查一下，按我的经验，通常是Canal的问题，于是我瞅了眼Canal的日志，果然报错了。<br>关键的错误就是这一句：</p><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">java.io.IOException: Received error packet: errno = <span class="hljs-number">1236</span>, sqlstate = HY000 errmsg = Could not <span class="hljs-keyword">find</span> <span class="hljs-keyword">first</span> <span class="hljs-built_in">log</span> <span class="hljs-keyword">file</span> name in binary <span class="hljs-built_in">log</span> <span class="hljs-built_in">index</span> <span class="hljs-keyword">file</span><br></code></pre></td></tr></table></figure><p>这是说读取不到binlog了。</p><p>按日志里的信息，该Topic在读取的binlog和位点分别是mysql-bin.000010和984601。</p><figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs clojure">&#123;<span class="hljs-string">&quot;identity&quot;</span>:&#123;<span class="hljs-string">&quot;slaveId&quot;</span><span class="hljs-symbol">:-1</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;sourceAddress&quot;</span>:&#123;<span class="hljs-string">&quot;address&quot;</span>:<span class="hljs-string">&quot;mid1&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;port&quot;</span>:<span class="hljs-number">3306</span>&#125;&#125;<span class="hljs-punctuation">,</span><span class="hljs-string">&quot;postion&quot;</span>:&#123;<span class="hljs-string">&quot;included&quot;</span><span class="hljs-symbol">:false</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;journalName&quot;</span>:<span class="hljs-string">&quot;mysql-bin.000010&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;position&quot;</span>:<span class="hljs-number">984601</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;serverId&quot;</span>:<span class="hljs-number">3232238851</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;timestamp&quot;</span>:<span class="hljs-number">1676468225000</span>&#125;&#125;<br></code></pre></td></tr></table></figure><p>我连上对应的MySQL，查看binlog，好家伙，变成mysql-bin.000001了！！！我第一反应，这小子不会是重装MySQL了吧。一问，他说他昨天发现MySQL的binlog有重复的（没懂是什么意思），然后他执行了<code>reset master;</code></p><p>我。。。。</p><p>他又说他修改了Topic配置文件的<code>canal.instance.master.journal.name</code>和<code>canal.instance.master.position</code>配置项，把binlog和位点修改为现有的，但是重启Canal后没有生效。</p><p>这个问题在我刚接触Canal的时候也遇到过，修改配置文件中的binlog和位点，重启后发现Canal还在读以前的binlog和位点。这是因为Topic配置文件中的位点只是创建Topic时用于定位的，之后binlog的读取进度都记录在Zookeeper中，不再从配置文件中获取。所以Canal读取不到binlog的问题可以通过修改Zookeeper的Canal的信息来解决。</p><p>解决步骤如下：</p><p>先连接Zookeeper客户端</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/zookeeper/</span>bin/zkCli.sh -server localhost:<span class="hljs-number">2181</span><br></code></pre></td></tr></table></figure><p>然后修改对应的canal信息</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-meta"># 查看现有canal位点信息</span><br>[<span class="hljs-meta">zk: localhost:2181(CONNECTED) 13</span>] <span class="hljs-keyword">get</span> /otter/canal/destinations/segi_pub/parse<br>&#123;<span class="hljs-string">&quot;identity&quot;</span>:&#123;<span class="hljs-string">&quot;slaveId&quot;</span>:<span class="hljs-number">-1</span>,<span class="hljs-string">&quot;sourceAddress&quot;</span>:&#123;<span class="hljs-string">&quot;address&quot;</span>:<span class="hljs-string">&quot;mid1&quot;</span>,<span class="hljs-string">&quot;port&quot;</span>:<span class="hljs-number">3306</span>&#125;&#125;,<span class="hljs-string">&quot;postion&quot;</span>:&#123;<span class="hljs-string">&quot;included&quot;</span>:<span class="hljs-literal">false</span>,<span class="hljs-string">&quot;journalName&quot;</span>:<span class="hljs-string">&quot;mysql-bin.000001&quot;</span>,<span class="hljs-string">&quot;position&quot;</span>:<span class="hljs-number">207621226</span>,<span class="hljs-string">&quot;serverId&quot;</span>:<span class="hljs-number">3232238851</span>,<span class="hljs-string">&quot;timestamp&quot;</span>:<span class="hljs-number">1676529084000</span>&#125;&#125;<br><br><span class="hljs-meta"># 修改</span><br>[<span class="hljs-meta">zk: localhost:2181(CONNECTED) 14</span>] <span class="hljs-keyword">set</span> /otter/canal/destinations/segi_pub/parse &#123;<span class="hljs-string">&quot;identity&quot;</span>:&#123;<span class="hljs-string">&quot;slaveId&quot;</span>:<span class="hljs-number">-1</span>,<span class="hljs-string">&quot;sourceAddress&quot;</span>:&#123;<span class="hljs-string">&quot;address&quot;</span>:<span class="hljs-string">&quot;mid1&quot;</span>,<span class="hljs-string">&quot;port&quot;</span>:<span class="hljs-number">3306</span>&#125;&#125;,<span class="hljs-string">&quot;postion&quot;</span>:&#123;<span class="hljs-string">&quot;included&quot;</span>:<span class="hljs-literal">false</span>,<span class="hljs-string">&quot;journalName&quot;</span>:<span class="hljs-string">&quot;mysql-bin.000001&quot;</span>,<span class="hljs-string">&quot;position&quot;</span>:<span class="hljs-number">207621</span>,<span class="hljs-string">&quot;serverId&quot;</span>:<span class="hljs-number">3232238851</span>,<span class="hljs-string">&quot;timestamp&quot;</span>:<span class="hljs-number">1676529084000</span>&#125;&#125;<br></code></pre></td></tr></table></figure><p>最后重启canal。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>运维</category>
+      
+      <category>canal</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>运维</tag>
+      
+      <tag>canal</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
   
 </search>
