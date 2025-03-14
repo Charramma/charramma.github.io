@@ -19,22 +19,22 @@
   <meta name="author" content="Charramma">
   <meta name="keywords" content="">
   
-    <meta name="description" content="本文首发于博客园：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;CharrammaBlog&#x2F;p&#x2F;17653321.html             Kubernetes更新证书执行kubectl命令时，报error: You must be logged in to the server (Unauthorized)错误。这是因为Kubernetes证书过期了。 可以使">
+    <meta name="description" content="当变量为不可变对象时，a+&#x3D;b和a&#x3D;a+b是一样的，但前后两个a已经不是同一个对象 当变量是可变对象时，虽然a+&#x3D;b和a&#x3D;a+b的效果是一样的，但是a&#x3D;a+b前后的两个a也不是同一个对象了，而a+&#x3D;b前后两个a还是同一个对象 看如下实例： 当a和b为不可变对象 123456789101112131415161718192021# 不可变对象# a+&#x3D;b 前后的a不是同一个对象&gt;&gt;&amp;gt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kubernetes更新证书">
-<meta property="og:url" content="http://example.com/2023/08/24/Kubernetes%E6%9B%B4%E6%96%B0%E8%AF%81%E4%B9%A6/index.html">
+<meta property="og:title" content="Python中的a+&#x3D;b和a&#x3D;a+b之间的区别">
+<meta property="og:url" content="http://example.com/2020/03/26/Python%E4%B8%AD%E7%9A%84a-b%E5%92%8Ca-a-b%E4%B9%8B%E9%97%B4%E7%9A%84%E5%8C%BA%E5%88%AB/index.html">
 <meta property="og:site_name" content="Charramma的赛博自留地">
-<meta property="og:description" content="本文首发于博客园：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;CharrammaBlog&#x2F;p&#x2F;17653321.html             Kubernetes更新证书执行kubectl命令时，报error: You must be logged in to the server (Unauthorized)错误。这是因为Kubernetes证书过期了。 可以使">
+<meta property="og:description" content="当变量为不可变对象时，a+&#x3D;b和a&#x3D;a+b是一样的，但前后两个a已经不是同一个对象 当变量是可变对象时，虽然a+&#x3D;b和a&#x3D;a+b的效果是一样的，但是a&#x3D;a+b前后的两个a也不是同一个对象了，而a+&#x3D;b前后两个a还是同一个对象 看如下实例： 当a和b为不可变对象 123456789101112131415161718192021# 不可变对象# a+&#x3D;b 前后的a不是同一个对象&gt;&gt;&amp;gt">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-24T01:37:00.000Z">
-<meta property="article:modified_time" content="2025-03-13T06:34:19.579Z">
+<meta property="article:published_time" content="2020-03-26T02:24:59.000Z">
+<meta property="article:modified_time" content="2025-03-14T03:08:43.025Z">
 <meta property="article:author" content="Charramma">
-<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Kubernetes更新证书 - Charramma的赛博自留地</title>
+  <title>Python中的a+=b和a=a+b之间的区别 - Charramma的赛博自留地</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -212,7 +212,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Kubernetes更新证书"></span>
+            <span id="subtitle" data-typed-text="Python中的a+=b和a=a+b之间的区别"></span>
           
         </div>
 
@@ -223,8 +223,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-08-24 09:37" pubdate>
-          2023年8月24日 上午
+        <time datetime="2020-03-26 10:24" pubdate>
+          2020年3月26日 上午
         </time>
       </span>
     
@@ -235,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          148 字
+          555 字
         
       </span>
     
@@ -246,7 +246,7 @@
         
         
         
-          2 分钟
+          5 分钟
         
       </span>
     
@@ -283,28 +283,31 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Kubernetes更新证书</h1>
+            <h1 id="seo-header">Python中的a+=b和a=a+b之间的区别</h1>
             
             
               <div class="markdown-body">
                 
-                <div class="note note-info">
-            <p>本文首发于博客园：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/CharrammaBlog/p/17653321.html">https://www.cnblogs.com/CharrammaBlog/p/17653321.html</a></p>
-          </div>
+                <p>当变量为不可变对象时，<code>a+=b</code>和<code>a=a+b</code>是一样的，但前后两个a已经不是同一个对象</p>
+<p>当变量是可变对象时，虽然<code>a+=b</code>和<code>a=a+b</code>的效果是一样的，但是<code>a=a+b</code>前后的两个a也不是同一个对象了，而<code>a+=b</code>前后两个a还是同一个对象</p>
+<p>看如下实例：</p>
+<p>当a和b为不可变对象</p>
+<figure class="highlight python-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python-repl"># 不可变对象<br># a+=b 前后的a不是同一个对象<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">a=<span class="hljs-number">1</span></span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">b=<span class="hljs-number">2</span></span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">id</span>(a)</span><br>140722530604704<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">a+=b</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">id</span>(a)</span><br>140722530604768<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">print</span>(a)</span><br>3<br># a=a+b 前后的a也不是同一个对象<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">a=<span class="hljs-number">1</span></span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">b=<span class="hljs-number">2</span></span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">id</span>(a)</span><br>140722530604704<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">a=a+b</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">id</span>(a)</span><br>140722530604768<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">print</span>(a)</span><br>3<br></code></pre></td></tr></table></figure>
 
-<h1 id="Kubernetes更新证书"><a href="#Kubernetes更新证书" class="headerlink" title="Kubernetes更新证书"></a>Kubernetes更新证书</h1><p>执行kubectl命令时，报<code>error: You must be logged in to the server (Unauthorized)</code>错误。<br>这是因为Kubernetes证书过期了。</p>
-<p>可以使用如下命令查看证书有效时间</p>
-<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs smali"><span class="hljs-comment"># 1.19及以下版本的Kubernetes</span><br>kubeadm alpha certs<span class="hljs-built_in"> check-expiration</span><br><span class="hljs-built_in"></span><br><span class="hljs-comment"># 1.20及以上版本的Kubernetes</span><br>kubeadm certs check-expiration<br></code></pre></td></tr></table></figure>
+<p>当a和b为可变对象</p>
+<figure class="highlight python-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python-repl"># 可变对象<br># a+=b 前后的a是同一个对象<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">a=[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">b=[<span class="hljs-number">3</span>,<span class="hljs-number">4</span>]</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">id</span>(a)</span><br>214391266944<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">a+=b</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">id</span>(a)</span><br>214391266944<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">print</span>(a)</span><br>[1, 2, 3, 4]<br># a=a+b 前后的a不是同一个对象<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">a=[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">b=[<span class="hljs-number">3</span>,<span class="hljs-number">4</span>]</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">id</span>(a)</span><br>2143494790272<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">a=a+b</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">id</span>(a)</span><br>2143494790592<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-built_in">print</span>(a)</span><br>[1, 2, 3, 4]<br></code></pre></td></tr></table></figure>
 
-<p>更新证书</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># &lt;= 1.19</span><br><span class="hljs-attribute">kubeadm</span> alpha certs renew <span class="hljs-literal">all</span><br><br><span class="hljs-comment"># &gt;= 1.20</span><br><span class="hljs-attribute">kubeadm</span> certs renew <span class="hljs-literal">all</span><br></code></pre></td></tr></table></figure>
 
-<p>更新证书完成后，重启kubernetes组件</p>
-<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs coq">docker ps |<span class="hljs-type">grep</span> -E &#x27;k8s_kube-apiserver|<span class="hljs-type">k8s_kube</span>-controller-manager|<span class="hljs-type">k8s_kube</span>-scheduler|<span class="hljs-type">k8s_etcd_etcd</span>&#x27; | <span class="hljs-type">awk</span> -F &#x27; &#x27; &#x27;&#123;print $<span class="hljs-number">1</span>&#125;&#x27; | <span class="hljs-type">xargs</span> docker restart<br><br>systemctl restart kubelet<br></code></pre></td></tr></table></figure>
 
-<p>更新kubectl控制文件</p>
-<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mel">mv /root/.kube/config /root/.kube/config-$(<span class="hljs-keyword">date</span> +%Y%m%d%H%M%S)<br>cp /etc/kubernetes/admin.conf /root/.kube/config<br></code></pre></td></tr></table></figure>
+<p>区别在于，<code>+</code>操作会调用<code>__add__()</code>方法，该方法返回一个新的对象，原对象不修改。而<code>+=</code>调用的是<code>__iadd__()</code>方法，该方法直接在原对象上进行更新，该方法返回值为<code>None</code>。如果对象没有<code>__iadd__()</code>方法时，会尝试调用<code>__add__()</code>方法。</p>
+<p>不可变对象没有<code>__iadd__()</code>方法，可变对象同时具有<code>__add__()</code>和<code>__iadd__()</code>方法。</p>
+<figure class="highlight python-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python-repl"><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">a = <span class="hljs-number">1</span></span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">b = []</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(a, <span class="hljs-string">&#x27;__add__&#x27;</span>):</span><br><span class="hljs-meta prompt_">...</span> <span class="language-python">        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;a has __add__&#x27;</span>)</span><br><span class="hljs-meta prompt_">...</span><br>a has __add__<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(b, <span class="hljs-string">&#x27;__add__&#x27;</span>):</span><br><span class="hljs-meta prompt_">...</span> <span class="language-python">            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;b has __add__&#x27;</span>)</span><br><span class="hljs-meta prompt_">...</span><br>b has __add__<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(a, <span class="hljs-string">&#x27;__iadd__&#x27;</span>):</span><br><span class="hljs-meta prompt_">...</span> <span class="language-python">                <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;a has __iadd__&#x27;</span>)</span><br><span class="hljs-meta prompt_">...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python"><span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(b, <span class="hljs-string">&#x27;__iadd__&#x27;</span>):</span><br><span class="hljs-meta prompt_">...</span> <span class="language-python">                    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;b has __iadd__&#x27;</span>)</span><br><span class="hljs-meta prompt_">...</span><br>b has __iadd__<br></code></pre></td></tr></table></figure>
 
+<p><strong>结论</strong>：</p>
+<ul>
+<li>当变量是不可变对象时，<code>a+=b</code>和<code>a=a+b</code>调用的都是<code>__add__</code>方法，返回的是一个新对象</li>
+<li>当变量是可变对象时，<code>a+=b</code>调用的是<code>__iadd__</code>方法，直接在原对象上进行更新；<code>a=a+b</code>调用的是<code>__add__</code>方法，返回一个新对象</li>
+</ul>
 
                 
               </div>
@@ -323,7 +326,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/kubernetes/" class="category-chain-item">kubernetes</a>
+  <a href="/categories/Python/" class="category-chain-item">Python</a>
   
   
 
@@ -338,7 +341,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/kubernetes/" class="print-no-link">#kubernetes</a>
+        <a href="/tags/Python/" class="print-no-link">#Python</a>
       
     </div>
   
@@ -352,21 +355,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/03/19/Python%E7%A8%8B%E5%BA%8F%E9%80%80%E5%87%BA%E9%97%AE%E9%A2%98/" title="Python程序退出问题">
+                      <a href="/2020/04/03/git%E9%94%99%E8%AF%AF-Your-local-changes-to-the-following-files-would-be-overwritten-by-merge/" title="git错误-Your local changes to the following files would be overwritten by merge">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Python程序退出问题</span>
+                        <span class="hidden-mobile">git错误-Your local changes to the following files would be overwritten by merge</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/2023/02/16/Canal%E8%AF%BB%E5%8F%96%E4%B8%8D%E5%88%B0binlog%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" title="Canal读取不到binlog的解决办法">
-                        <span class="hidden-mobile">Canal读取不到binlog的解决办法</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>
