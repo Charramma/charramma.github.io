@@ -1,0 +1,708 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/touxiang.jpg">
+  <link rel="icon" href="/img/touxiang.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#b3b3b3">
+  <meta name="author" content="Charramma">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="MySQL数据慢查询激增的定位与解决开启慢查询日志1234567891011121314-- 检查是否开启慢查询日志SHOW VARIABLES LIKE &#x27;slow_query_log&#x27;;-- 查看慢查询阈值（执行时间超过多少秒的查询会被记录到慢查询日志中）SHOW VARIABLES LIKE &#x27;long_query_time&#x27;;-- 慢查询日志路径SH">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL数据库慢查询激增的定位与解决">
+<meta property="og:url" content="http://example.com/2025/03/16/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%BF%80%E5%A2%9E%E7%9A%84%E5%AE%9A%E4%BD%8D%E4%B8%8E%E8%A7%A3%E5%86%B3/index.html">
+<meta property="og:site_name" content="Charramma的赛博自留地">
+<meta property="og:description" content="MySQL数据慢查询激增的定位与解决开启慢查询日志1234567891011121314-- 检查是否开启慢查询日志SHOW VARIABLES LIKE &#x27;slow_query_log&#x27;;-- 查看慢查询阈值（执行时间超过多少秒的查询会被记录到慢查询日志中）SHOW VARIABLES LIKE &#x27;long_query_time&#x27;;-- 慢查询日志路径SH">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-16T11:35:59.000Z">
+<meta property="article:modified_time" content="2025-03-16T14:13:45.869Z">
+<meta property="article:author" content="Charramma">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>MySQL数据库慢查询激增的定位与解决 - Charramma的赛博自留地</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Charramma的赛博自留地</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MySQL数据库慢查询激增的定位与解决"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-16 19:35" pubdate>
+          2025年3月16日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          997 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          9 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">MySQL数据库慢查询激增的定位与解决</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="MySQL数据慢查询激增的定位与解决"><a href="#MySQL数据慢查询激增的定位与解决" class="headerlink" title="MySQL数据慢查询激增的定位与解决"></a>MySQL数据慢查询激增的定位与解决</h1><h3 id="开启慢查询日志"><a href="#开启慢查询日志" class="headerlink" title="开启慢查询日志"></a>开启慢查询日志</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 检查是否开启慢查询日志</span><br><span class="hljs-keyword">SHOW</span> VARIABLES <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;slow_query_log&#x27;</span>;<br><br><span class="hljs-comment">-- 查看慢查询阈值（执行时间超过多少秒的查询会被记录到慢查询日志中）</span><br><span class="hljs-keyword">SHOW</span> VARIABLES <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;long_query_time&#x27;</span>;<br><br><span class="hljs-comment">-- 慢查询日志路径</span><br><span class="hljs-keyword">SHOW</span> VARIABLES <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;show_query_log_file&#x27;</span>;<br><br><span class="hljs-comment">-- 开启慢查询日志</span><br><span class="hljs-keyword">SET</span> <span class="hljs-keyword">GLOBAL</span> slow_query_log <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;ON&#x27;</span>;<br><br><span class="hljs-comment">-- 设置慢查询阈值</span><br><span class="hljs-keyword">SET</span> <span class="hljs-keyword">GLOBAL</span> long_query_time <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br></code></pre></td></tr></table></figure>
+
+<p>上面开启慢查询日志并不是长期有效，当MySQL进程重启后，该配置将失效。</p>
+<p>修改my.cnf使慢查询日志长期开启</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[mysqld]</span><br><span class="hljs-attr">slow_query_log</span> = <span class="hljs-number">1</span><br><span class="hljs-attr">slow_query_log_file</span> = /var/log/mysql/slow.log<br><span class="hljs-attr">long_query_time</span> = <span class="hljs-number">2</span><br><span class="hljs-comment"># 记录未走索引的查询</span><br><span class="hljs-attr">log_queries_not_using_indexes</span> = <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="监控慢查询"><a href="#监控慢查询" class="headerlink" title="监控慢查询"></a>监控慢查询</h3><p>可以通过Prometheus+Grafana+mysqld_exporter来对MySQL进行监控，捕获数据库QPS突增、CPU使用率超阈值（&gt;80%）、慢查询数量激增等异常情况。</p>
+<p>实时监控慢查询数量的语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">GLOBAL</span> STATUS <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;Slow_queries&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="紧急措施"><a href="#紧急措施" class="headerlink" title="紧急措施"></a>紧急措施</h3><p>为防止雪崩效应，应立即限制高危操作的并发量。</p>
+<p>如动态限制最大连接数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 将最大连接数降低至200</span><br><span class="hljs-keyword">SET</span> <span class="hljs-keyword">GLOBAL</span> max_connections <span class="hljs-operator">=</span> <span class="hljs-number">200</span>;<br></code></pre></td></tr></table></figure>
+
+<p>可使用第三方工具如pt-kill终止耗时超过10秒的查询。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">pt-kill --busy-time 10 --kill --victims all --print h=127.0.0.1<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="分析慢查询日志"><a href="#分析慢查询日志" class="headerlink" title="分析慢查询日志"></a>分析慢查询日志</h3><p>通过分析慢日志定位问题所在</p>
+<p>使用MySQL内置工具mysqldumnpslow提取关键信息</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs excel"># -s <span class="hljs-built_in">t</span> 按查询时间排序<br># -<span class="hljs-built_in">t</span> <span class="hljs-number">10</span> 输出<span class="hljs-number">10</span>条<br>mysqldumpslow -s <span class="hljs-built_in">t</span> -<span class="hljs-built_in">t</span> <span class="hljs-number">10</span> /<span class="hljs-built_in">var</span>/<span class="hljs-built_in">log</span>/mysql/slow.log<br></code></pre></td></tr></table></figure>
+
+<p>输出示例：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Count</span>: <span class="hljs-number">200</span>  Time=<span class="hljs-number">5</span>.<span class="hljs-number">12</span>s (<span class="hljs-number">1024</span>s)  Lock=<span class="hljs-number">0</span>.<span class="hljs-number">00</span>s (<span class="hljs-number">0</span>s)  Rows=<span class="hljs-number">100</span>.<span class="hljs-number">0</span> (<span class="hljs-number">20000</span>), user@host<br>  <span class="hljs-attribute">SELECT</span> * FROM orders WHERE status=&#x27;pending&#x27; AND create_time &gt; &#x27;<span class="hljs-number">2023</span>-<span class="hljs-number">01</span>-<span class="hljs-number">01</span>&#x27;;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>使用Percona Toolkit分析慢日志，生成详细报告</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stata">pt-<span class="hljs-keyword">query</span>-digest /<span class="hljs-keyword">var</span>/<span class="hljs-keyword">log</span>/mysql/slow.<span class="hljs-keyword">log</span> &gt; slow_report.txt<br></code></pre></td></tr></table></figure>
+
+<p>输出示例：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># Percona Toolkit&#x27;s pt-query-digest version 3.0.10</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># Configuration file /etc/percona-toolkit/percona-toolkit.conf saved on 2024-05-15 14:37:00 UTC</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># Query 1: 0.00 QPS, 0.00x concurrency, ID 0x6E4F7D7D7F7D7D7D at byte 100</span><br><span class="hljs-comment"># This item is included in the report because it matches --limit.</span><br><span class="hljs-comment"># Scores: V/M = 0.00</span><br><span class="hljs-comment"># Time range: 2024-05-15 14:30:00 UTC to 2024-05-15 14:35:00 UTC</span><br><span class="hljs-comment"># Attribute    pct   total     min     max     avg     95%  stddev  median</span><br><span class="hljs-comment"># ============ === ======= ======= ======= ======= ======= ======= =======</span><br><span class="hljs-comment"># Count       100       1       1       1       1       1       0       1</span><br><span class="hljs-comment"># Exec time   100    0.01    0.01    0.01    0.01    0.01    0.00    0.01</span><br><span class="hljs-comment"># Lock time    0%    0.00    0.00    0.00    0.00    0.00    0.00    0.00</span><br><span class="hljs-comment"># Rows sent    0%       0       0       0       0       0       0       0</span><br><span class="hljs-comment"># Rows examined 100       1       1       1       1       1       0       1</span><br><span class="hljs-comment"># Bytes sent   0%       0       0       0       0       0       0       0</span><br><span class="hljs-comment"># Tmp tables   0%       0       0       0       0       0       0       0</span><br><span class="hljs-comment"># Tmp disk tables 0%       0       0       0       0       0       0       0</span><br><span class="hljs-comment"># Full scan    0%       0       0       0       0       0       0       0</span><br><span class="hljs-comment"># Full join    0%       0       0       0       0       0       0       0</span><br><span class="hljs-comment"># Tmp table on disk 0%       0       0       0       0       0       0       0</span><br><span class="hljs-comment"># Filesort     0%       0       0       0       0       0       0       0</span><br><span class="hljs-comment"># Filesort on disk 0%       0       0       0       0       0       0       0</span><br><span class="hljs-comment"># Merge passes   0%       0       0       0       0       0       0       0</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># Query_time distribution</span><br><span class="hljs-comment">#   1us</span><br><span class="hljs-comment">#  10us</span><br><span class="hljs-comment"># 100us</span><br><span class="hljs-comment">#   1ms  ################################################################</span><br><span class="hljs-comment">#  10ms+ ###############################################################</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># EXPLAIN /*!50100 */ SELECT * FROM `test_table` WHERE `id` = 1;</span><br><span class="hljs-comment">#</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>针对单条SQL进行剖析</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gams"><span class="hljs-function"><span class="hljs-title">EXPLAN</span></span> SELECT ...<br></code></pre></td></tr></table></figure>
+
+<p>核心指标：</p>
+<ul>
+<li><code>type</code>：扫描类型（ALL &gt; index &gt; range &gt; ref &gt; eq_ref &gt; const）</li>
+<li><code>key</code>：实际使用的索引</li>
+<li><code>rows</code>：预估扫描行数</li>
+<li><code>Extra</code>：<code>Using filesort</code>（文件排序）、<code>Using temporary</code>（临时表）</li>
+</ul>
+<h3 id="常见导致慢查询激增的原因"><a href="#常见导致慢查询激增的原因" class="headerlink" title="常见导致慢查询激增的原因"></a>常见导致慢查询激增的原因</h3><p><strong>索引缺失或失效</strong></p>
+<p>避免索引失效：</p>
+<ul>
+<li>禁止对索引列使用函数</li>
+<li>注意隐式类型转换</li>
+</ul>
+<p><strong>复杂查询与低效SQL</strong></p>
+<ul>
+<li>嵌套子查询导致衍生表</li>
+<li><code>SELECT</code> 查询大量无用字段</li>
+<li>多表<code>JOIN</code>未优化</li>
+</ul>
+<p>可采取的优化方案：拆分子查询或分批处理</p>
+<p><strong>资源瓶颈</strong></p>
+<p>常表现为CPU使用率过高、磁盘IO瓶颈、内存OOM</p>
+<p>解决方向一是调优MySQL参数</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">innodb_buffer_pool_size</span> = <span class="hljs-number">32</span>G  <span class="hljs-comment"># 通常设为物理内存的70%-80%</span><br><span class="hljs-attr">innodb_log_file_size</span> = <span class="hljs-number">2</span>G       <span class="hljs-comment"># 减少日志刷写频率</span><br><span class="hljs-attr">max_connections</span> = <span class="hljs-number">1000</span>         <span class="hljs-comment"># 避免连接风暴</span><br></code></pre></td></tr></table></figure>
+
+<p>另一个方向是硬件升级，比如将硬盘升级为固态硬盘、增加内存容量、升级CPU核心数</p>
+<p><strong>锁竞争与事务阻塞</strong></p>
+<p>诊断方法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> ENGINE INNODB STATUS; <span class="hljs-comment">-- 查看LATEST DETECTED DEADLOCK</span><br><br><span class="hljs-comment">-- 查看当前锁信息</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> information_schema.INNODB_LOCKS;<br><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> information_schema.INNODB_LOCK_WAITS;<br></code></pre></td></tr></table></figure>
+
+<p>优化手段</p>
+<ul>
+<li>缩短事务：避免在事务中执行网络IO或耗时操作</li>
+<li>降低隔离级别</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SET</span> SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>索引优化：缩小锁范围</li>
+</ul>
+<p><strong>配置不当</strong></p>
+<p>关键参数：</p>
+<ul>
+<li><code>tmp_table_size</code>：控制内存临时表大小</li>
+<li><code>max_heap_table_size</code>：内存表最大尺寸</li>
+<li><code>innodb_flush_method</code>：避免双缓冲，提升IO效率</li>
+</ul>
+<p><strong>数据量膨胀</strong></p>
+<p>可以将历史数据进行归档处理，或对大表进行分表分库</p>
+<h3 id="预防措施"><a href="#预防措施" class="headerlink" title="预防措施"></a>预防措施</h3><p><strong>读写分离</strong></p>
+<p><strong>设置缓存策略</strong></p>
+<p>如对热点数据使用Redis缓存</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"># 伪代码示例：先查缓存再查DB<br>def get_order(order_id):<br>    <span class="hljs-keyword">data</span> = redis.<span class="hljs-keyword">get</span>(f<span class="hljs-string">&quot;order:&#123;order_id&#125;&quot;</span>)<br>    <span class="hljs-keyword">if</span> not <span class="hljs-keyword">data</span>:<br>        <span class="hljs-keyword">data</span> = db.query(<span class="hljs-string">&quot;SELECT * FROM orders WHERE id = %s&quot;</span>, order_id)<br>        redis.setex(f<span class="hljs-string">&quot;order:&#123;order_id&#125;&quot;</span>, <span class="hljs-number">300</span>, <span class="hljs-keyword">data</span>)  # 缓存<span class="hljs-number">5</span>分钟<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">data</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>异步处理</strong></p>
+<ul>
+<li>将非实时操作（如日志记录、通知发送）写入消息队列</li>
+<li>使用Binlog监听实现数据同步（Canal、Debezium）</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/MySQL/" class="category-chain-item">MySQL</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MySQL/" class="print-no-link">#MySQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/15/MySQL%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84%E4%B8%AD%E4%BD%BF%E7%94%A8RESET-MASTER%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" title="MySQL主从架构中使用RESET MASTER的注意事项">
+                        <span class="hidden-mobile">MySQL主从架构中使用RESET MASTER的注意事项</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
