@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/touxiang.jpg">
+  <link rel="icon" href="/img/touxiang.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#b3b3b3">
+  <meta name="author" content="Charramma">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="容器无shell时如何测试外网**场景：**有时为了追求镜像的轻量化，会使用Scratch或Distroless作为基础镜像，这些镜像移除了交互式Shell，如&#x2F;bin&#x2F;bash或&#x2F;bin&#x2F;sh，也移除了一些常见的网络工具，如curl或ping。当Pod出现外网访问异常时，传统的调试方法将失效。 如果容器镜像中预装了curl、wget、nc等网络工具，可以直接通过kubectl exec命令直接执">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器无shell时如何测试外网">
+<meta property="og:url" content="http://example.com/2025/03/17/%E5%AE%B9%E5%99%A8%E6%97%A0shell%E6%97%B6%E5%A6%82%E4%BD%95%E6%B5%8B%E8%AF%95%E5%A4%96%E7%BD%91/index.html">
+<meta property="og:site_name" content="Charramma的赛博自留地">
+<meta property="og:description" content="容器无shell时如何测试外网**场景：**有时为了追求镜像的轻量化，会使用Scratch或Distroless作为基础镜像，这些镜像移除了交互式Shell，如&#x2F;bin&#x2F;bash或&#x2F;bin&#x2F;sh，也移除了一些常见的网络工具，如curl或ping。当Pod出现外网访问异常时，传统的调试方法将失效。 如果容器镜像中预装了curl、wget、nc等网络工具，可以直接通过kubectl exec命令直接执">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-17T06:27:21.000Z">
+<meta property="article:modified_time" content="2025-03-17T06:39:54.792Z">
+<meta property="article:author" content="Charramma">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="容器与微服务">
+<meta property="article:tag" content="Kubernetes">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>容器无shell时如何测试外网 - Charramma的赛博自留地</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Charramma的赛博自留地</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="容器无shell时如何测试外网"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-17 14:27" pubdate>
+          2025年3月17日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">容器无shell时如何测试外网</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="容器无shell时如何测试外网"><a href="#容器无shell时如何测试外网" class="headerlink" title="容器无shell时如何测试外网"></a>容器无shell时如何测试外网</h1><p>**场景：**有时为了追求镜像的轻量化，会使用Scratch或Distroless作为基础镜像，这些镜像移除了交互式Shell，如<code>/bin/bash</code>或<code>/bin/sh</code>，也移除了一些常见的网络工具，如<code>curl</code>或<code>ping</code>。当Pod出现外网访问异常时，传统的调试方法将失效。</p>
+<p>如果容器镜像中预装了<code>curl</code>、<code>wget</code>、<code>nc</code>等网络工具，可以直接通过kubectl exec命令直接执行这些工具来进行网络测试。如：</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sqf">kubectl <span class="hljs-built_in">exec</span> &lt;pod-<span class="hljs-built_in">name</span>&gt; -- curl http:<span class="hljs-comment">//example.com</span><br></code></pre></td></tr></table></figure>
+
+<p>但是本文主要讨论没有预装这些网络工具时，如何进行网络测试。</p>
+<h2 id="测试方案"><a href="#测试方案" class="headerlink" title="测试方案"></a>测试方案</h2><h3 id="方案一：使用临时容器进行调试"><a href="#方案一：使用临时容器进行调试" class="headerlink" title="方案一：使用临时容器进行调试"></a>方案一：使用临时容器进行调试</h3><p>参考文档：<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/workloads/pods/ephemeral-containers/">https://kubernetes.io/zh-cn/docs/concepts/workloads/pods/ephemeral-containers/</a></p>
+<p>通过将调试工具注入目标Pod的网络密码空间来进行调试。</p>
+<p>操作演示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 检查目标Pod所在命名空间</span><br>kubectl get pod -n &lt;namespace&gt;<br><br><span class="hljs-comment"># 启动调试容器（自动附加网络空间）</span><br><span class="hljs-comment"># 调试容器将与 目标容器 共享相同的网络、PID 和 IPC 命名空间</span><br>kubectl debug -it &lt;目标Pod&gt; \<br>  --image=nicolaka/netshoot \<br>  --target=&lt;目标容器&gt;<br><br><span class="hljs-comment"># 在调试容器中执行测试</span><br>curl -Iv https://example.com<br>tcptraceroute -n 8.8.8.8 443<br></code></pre></td></tr></table></figure>
+
+<p><code>nicolaka/netshoot</code>是一个专门用于网络调试的 Docker 镜像，它包含了大量网络诊断工具，如 <code>ping</code>、<code>traceroute</code>、<code>nslookup</code>、<code>dig</code>、<code>tcpdump</code> 等。</p>
+<p>此种方案比较适用于：</p>
+<ul>
+<li>快速诊断HTTP&#x2F;HTTPS连接问题</li>
+<li>分析TCP&#x2F;UDP层网络延迟</li>
+<li>需要完整的网络诊断套件</li>
+</ul>
+<h3 id="方案二：新建辅助容器共享目标容器网络"><a href="#方案二：新建辅助容器共享目标容器网络" class="headerlink" title="方案二：新建辅助容器共享目标容器网络"></a>方案二：新建辅助容器共享目标容器网络</h3><p>如果临时容器功能不可用，允许修改Pod配置的话，可以编辑Pod定义，添加一个新的容器与目标Pod共享网络命名空间。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">my-pod</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">containers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">&lt;目标容器&gt;</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">&lt;目标容器所使用的镜像&gt;</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">network-debugger</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">nicolaka/netshoot</span><br></code></pre></td></tr></table></figure>
+
+<p>新增的<code>network-debugger</code>容器与主容器共享一个网络命名空间，可以访问相同的网络资源。</p>
+<p>完成Pod配置更新后，使用<code>kubectl exec</code>命令进入<code>network-debugger</code>容器，执行网络测试命令：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">kubectl exec -<span class="hljs-keyword">it</span> network-debugger <span class="hljs-comment">-- curl http://example.com</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="方案三：容器内引用检测脚本"><a href="#方案三：容器内引用检测脚本" class="headerlink" title="方案三：容器内引用检测脚本"></a>方案三：容器内引用检测脚本</h3><p>利用Python脚本进行检测</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl <span class="hljs-built_in">exec</span> &lt;目标Pod&gt; -- python3 -c <span class="hljs-string">&#x27;</span><br><span class="hljs-string">import socket,ssl</span><br><span class="hljs-string">context = ssl.create_default_context()</span><br><span class="hljs-string">with socket.create_connection((&quot;www.baidu.com&quot;,443)) as sock:</span><br><span class="hljs-string">    with context.wrap_socket(sock, server_hostname=&quot;www.baidu.com&quot;) as ssock:</span><br><span class="hljs-string">        print(ssock.version())</span><br><span class="hljs-string">&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>利用Node.js进行检测</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl <span class="hljs-built_in">exec</span> target-pod -- node -e <span class="hljs-string">&#x27;</span><br><span class="hljs-string">const https = require(&quot;https&quot;);</span><br><span class="hljs-string">https.get(&quot;https://www.baidu.com&quot;, res =&gt; &#123;</span><br><span class="hljs-string">  console.log(`STATUS: $&#123;res.statusCode&#125;`);</span><br><span class="hljs-string">&#125;).on(&quot;error&quot;, err =&gt; &#123;</span><br><span class="hljs-string">  console.error(`ERROR: $&#123;err.message&#125;`);</span><br><span class="hljs-string">&#125;);</span><br><span class="hljs-string">&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="方案四：kubernetes-API代理模式"><a href="#方案四：kubernetes-API代理模式" class="headerlink" title="方案四：kubernetes API代理模式"></a>方案四：kubernetes API代理模式</h3><p>原理：通过kubectl proxy创建API Server代理，间接测试容器内服务的外网访问（适用于HTTP服务）</p>
+<p>操作步骤：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启动API Server代理（本地端口8001）</span><br>kubectl proxy --port=8001 &amp;<br><br><span class="hljs-comment"># 通过代理访问目标Pod的端口（需Pod监听HTTP）</span><br>curl http://localhost:8001/api/v1/namespaces/&lt;NAMESPACE&gt;/pods/&lt;POD_NAME&gt;/proxy/<br></code></pre></td></tr></table></figure>
+
+<h3 id="方案五：使用跳板机Pod代理测试"><a href="#方案五：使用跳板机Pod代理测试" class="headerlink" title="方案五：使用跳板机Pod代理测试"></a>方案五：使用跳板机Pod代理测试</h3><p>模拟一个与目标Pod相同的网络环境。可以使用跳板机Pod来实现。</p>
+<p>启动跳板机Pod</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl run -it --<span class="hljs-built_in">rm</span> --image=nicolaka/netshoot jump-pod<br></code></pre></td></tr></table></figure>
+
+<p>在跳板机中通过代理测试目标Pod网络：</p>
+<p>假设目标Pod的IP为<code>10.244.1.5</code>，可以在跳板机Pod中执行以下命令进行测试</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl <span class="hljs-built_in">exec</span> -it jump-pod -- curl http://10.244.1.5<br></code></pre></td></tr></table></figure>
+
+<h3 id="方案六：nsenter工具"><a href="#方案六：nsenter工具" class="headerlink" title="方案六：nsenter工具"></a>方案六：nsenter工具</h3><p>可用于容器网络异常排查。具备以下优势：</p>
+<ol>
+<li><strong>零侵入性</strong>：无需修改Pod定义或创建辅助资源</li>
+<li><strong>全权限访问</strong>：直接操作容器的Linux命名空间</li>
+<li><strong>环境无损</strong>：不改变容器原有进程状态</li>
+<li><strong>工具链自由</strong>：可使用宿主机的完整网络诊断工具集</li>
+</ol>
+<p>获取目标容器的PID</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># docker</span><br>docker inspect -f <span class="hljs-string">&#x27;&#123;&#123;.State.Pid&#125;&#125;&#x27;</span> &lt;container_id&gt;<br><br><span class="hljs-comment"># containerd</span><br>crictl inspect -o json &lt;container_id&gt; | grep pid<br></code></pre></td></tr></table></figure>
+
+<p>进入容器的网络命名空间</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">nsenter -t &lt;pid&gt; -n<br><br><span class="hljs-comment"># 同时进入网络+进程命名空间</span><br>nsenter -n -p -t <span class="hljs-variable">$PID</span><br><br><span class="hljs-comment"># 查看容器内进程网络连接</span><br>lsof -i -P -n<br></code></pre></td></tr></table></figure>
+
+<p>网络排查</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 高级流量分析</span><br>tcpdump -i eth0 -vvnn port 53  <span class="hljs-comment"># 抓取DNS流量</span><br>mtr -4 -rwc 20 8.8.8.8         <span class="hljs-comment"># 路径追踪</span><br><br><span class="hljs-comment"># 检查DNS配置</span><br><span class="hljs-built_in">cat</span> /etc/resolv.conf<br><br><span class="hljs-comment"># 手动测试DNS服务器</span><br>dig @10.96.0.10 kubernetes.default.svc.cluster.local<br>telnet 10.96.0.10 53<br><br><span class="hljs-comment"># 在容器网络空间执行openssl诊断</span><br>openssl s_client -connect api.stripe.com:443 -showcerts<br><br><span class="hljs-comment"># 检查TLS握手过程</span><br>Wireshark过滤表达式：<br>tcp.port == 443 &amp;&amp; (ssl.handshake || ssl.alert)<br><br><span class="hljs-comment"># 验证iptables规则</span><br><span class="hljs-comment"># 查看容器视角的nat表规则</span><br>iptables -t nat -L -n -v<br><br><span class="hljs-comment"># 检查MASQUERADE规则</span><br>iptables -t nat -S POSTROUTING<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>当使用nsenter进入容器的网络命名空间时，实际上是让当前进程进入目标容器的网络命名空间。此时，该进程会使用容器的网络环境（如网络接口、路由表等），但命令本身是宿主机上的命令，所以即使容器中没有安装相应的网络工具，也可以使用宿主机的工具进行网络排查</p>
+</blockquote>
+<h2 id="针对性排查"><a href="#针对性排查" class="headerlink" title="针对性排查"></a>针对性排查</h2><h3 id="排查是否DNS错误导致外网访问失败"><a href="#排查是否DNS错误导致外网访问失败" class="headerlink" title="排查是否DNS错误导致外网访问失败"></a>排查是否DNS错误导致外网访问失败</h3><p>方法1：使用nslookup（需要容器支持）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl <span class="hljs-built_in">exec</span> &lt;pod-name&gt; -- nslookup example.com<br></code></pre></td></tr></table></figure>
+
+<p>方法2：查看DNS配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl <span class="hljs-built_in">exec</span> &lt;pod-name&gt; -- <span class="hljs-built_in">cat</span> /etc/resolv.conf<br></code></pre></td></tr></table></figure>
+
+<p>若<code>nslookup</code>失败，需检查CoreDNS或kube-dns是否正常运行，以及Pod的DNS策略（<code>dnsPolicy</code>）是否为<code>ClusterFirst</code>。</p>
+<h3 id="排查是否网络策略与防火墙配置导致外网访问失败"><a href="#排查是否网络策略与防火墙配置导致外网访问失败" class="headerlink" title="排查是否网络策略与防火墙配置导致外网访问失败"></a>排查是否网络策略与防火墙配置导致外网访问失败</h3><p>检查NetworkPolicy，重点关注是否有策略限制出站流量（egress）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl describe networkpolicy -n &lt;namespace&gt;<br></code></pre></td></tr></table></figure>
+
+<p>检查云平台安全组或防火墙规则</p>
+<p>检查节点iptables规则</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs excel">iptables -<span class="hljs-built_in">t</span> nat -L -<span class="hljs-built_in">n</span> -v<br>iptables -L -<span class="hljs-built_in">n</span> -v<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AE%B9%E5%99%A8%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="category-chain-item">容器与微服务</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%AE%B9%E5%99%A8%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1/Docker/" class="category-chain-item">Docker</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%AE%B9%E5%99%A8%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1/Docker/Kubernetes/" class="category-chain-item">Kubernetes</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Docker/" class="print-no-link">#Docker</a>
+      
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1/" class="print-no-link">#容器与微服务</a>
+      
+        <a href="/tags/Kubernetes/" class="print-no-link">#Kubernetes</a>
+      
+    </div>
+  
+</div>
+
+
+              
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/16/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%BF%80%E5%A2%9E%E7%9A%84%E5%AE%9A%E4%BD%8D%E4%B8%8E%E8%A7%A3%E5%86%B3/" title="MySQL数据库慢查询激增的定位与解决">
+                        <span class="hidden-mobile">MySQL数据库慢查询激增的定位与解决</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
