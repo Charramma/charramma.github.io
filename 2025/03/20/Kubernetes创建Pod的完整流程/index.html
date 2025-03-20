@@ -19,16 +19,16 @@
   <meta name="author" content="Charramma">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Kubernetes创建Pod的完整流程博主参加过好几次面试都被问到这个问题，确实是一个高配的面试题。该问题主要是考察求职者对Kubernetes核心概念和工作原理的了解情况。此外，在生产环境中，部署和管理Pod可能会遇到各种问题，知道创建Pod的完整流程，有助于求职者在遇到问题时，依据流程中各个环节的特点和可能出现的错误，快速定位问题所在，并提出有效的解决方案。 通过Pod定义文件创建Pod假如">
+    <meta name="description" content="Kubernetes创建Pod的完整流程博主参加过好几次面试都被问到这个问题，确实是一个高频的面试题。该问题主要是考察求职者对Kubernetes核心概念和工作原理的了解情况。此外，在生产环境中，部署和管理Pod可能会遇到各种问题，知道创建Pod的完整流程，有助于求职者在遇到问题时，依据流程中各个环节的特点和可能出现的错误，快速定位问题所在，并提出有效的解决方案。 通过Pod定义文件创建Pod假如">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes创建Pod的完整流程">
 <meta property="og:url" content="http://example.com/2025/03/20/Kubernetes%E5%88%9B%E5%BB%BAPod%E7%9A%84%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B/index.html">
 <meta property="og:site_name" content="Charramma的赛博自留地">
-<meta property="og:description" content="Kubernetes创建Pod的完整流程博主参加过好几次面试都被问到这个问题，确实是一个高配的面试题。该问题主要是考察求职者对Kubernetes核心概念和工作原理的了解情况。此外，在生产环境中，部署和管理Pod可能会遇到各种问题，知道创建Pod的完整流程，有助于求职者在遇到问题时，依据流程中各个环节的特点和可能出现的错误，快速定位问题所在，并提出有效的解决方案。 通过Pod定义文件创建Pod假如">
+<meta property="og:description" content="Kubernetes创建Pod的完整流程博主参加过好几次面试都被问到这个问题，确实是一个高频的面试题。该问题主要是考察求职者对Kubernetes核心概念和工作原理的了解情况。此外，在生产环境中，部署和管理Pod可能会遇到各种问题，知道创建Pod的完整流程，有助于求职者在遇到问题时，依据流程中各个环节的特点和可能出现的错误，快速定位问题所在，并提出有效的解决方案。 通过Pod定义文件创建Pod假如">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pic1.imgdb.cn/item/67da25c388c538a9b5c05a95.png">
 <meta property="article:published_time" content="2025-03-20T07:28:39.000Z">
-<meta property="article:modified_time" content="2025-03-20T07:29:20.908Z">
+<meta property="article:modified_time" content="2025-03-20T07:34:13.132Z">
 <meta property="article:author" content="Charramma">
 <meta property="article:tag" content="kubernetes">
 <meta name="twitter:card" content="summary_large_image">
@@ -290,7 +290,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="Kubernetes创建Pod的完整流程"><a href="#Kubernetes创建Pod的完整流程" class="headerlink" title="Kubernetes创建Pod的完整流程"></a>Kubernetes创建Pod的完整流程</h1><p>博主参加过好几次面试都被问到这个问题，确实是一个高配的面试题。该问题主要是考察求职者对Kubernetes核心概念和工作原理的了解情况。此外，在生产环境中，部署和管理Pod可能会遇到各种问题，知道创建Pod的完整流程，有助于求职者在遇到问题时，依据流程中各个环节的特点和可能出现的错误，快速定位问题所在，并提出有效的解决方案。</p>
+                <h1 id="Kubernetes创建Pod的完整流程"><a href="#Kubernetes创建Pod的完整流程" class="headerlink" title="Kubernetes创建Pod的完整流程"></a>Kubernetes创建Pod的完整流程</h1><p>博主参加过好几次面试都被问到这个问题，确实是一个高频的面试题。该问题主要是考察求职者对Kubernetes核心概念和工作原理的了解情况。此外，在生产环境中，部署和管理Pod可能会遇到各种问题，知道创建Pod的完整流程，有助于求职者在遇到问题时，依据流程中各个环节的特点和可能出现的错误，快速定位问题所在，并提出有效的解决方案。</p>
 <h2 id="通过Pod定义文件创建Pod"><a href="#通过Pod定义文件创建Pod" class="headerlink" title="通过Pod定义文件创建Pod"></a>通过Pod定义文件创建Pod</h2><p>假如create_pod.yaml是一个Pod的定义文件，在用户执行<code>kubectl apply -f create_pod.yaml</code>后，会发生什么？</p>
 <p>首先，kuberctl会解析该文件，验证语法和字段的合法性。然后将Pod定义转换为JSON格式，通过REST API发送给Kubernetes API Server。</p>
 <p>API Server验证用户身份（如Token、证书），检查是否有权限创建Pod。</p>
