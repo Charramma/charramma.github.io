@@ -19,24 +19,44 @@
   <meta name="author" content="Charramma">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Kubernetes创建Pod的完整流程博主参加过好几次面试都被问到这个问题，确实是一个高频的面试题。该问题主要是考察求职者对Kubernetes核心概念和工作原理的了解情况。此外，在生产环境中，部署和管理Pod可能会遇到各种问题，知道创建Pod的完整流程，有助于求职者在遇到问题时，依据流程中各个环节的特点和可能出现的错误，快速定位问题所在，并提出有效的解决方案。 通过Pod定义文件创建Pod假如">
+    <meta name="description" content="一日特种兵，奇袭武功山因我想去其他城市看看，又没有什么时间。不请假，适合在周末的时间久可以去的，我想到了武功山。不止一个人和我推荐过武功山，但是也没听他们说出个什么理由来，最后只知道了武功山很高很难爬，很有调整性，值得去看看。好吧，于是我打算这个周末一个人去爬一下。 为什么是一个人去，因为我是真想挑战一下，看看我能多快登顶。如果我一个人去，我不用等一个大家都认可的时间出发，不用在不必要的地方做过多">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kubernetes创建Pod的完整流程">
-<meta property="og:url" content="http://example.com/2025/03/20/Kubernetes%E5%88%9B%E5%BB%BAPod%E7%9A%84%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:title" content="一日特种兵，奇袭武功山">
+<meta property="og:url" content="http://example.com/2025/03/22/%E4%B8%80%E6%97%A5%E7%89%B9%E7%A7%8D%E5%85%B5%EF%BC%8C%E5%A5%87%E8%A2%AD%E6%AD%A6%E5%8A%9F%E5%B1%B1/index.html">
 <meta property="og:site_name" content="Charramma的赛博自留地">
-<meta property="og:description" content="Kubernetes创建Pod的完整流程博主参加过好几次面试都被问到这个问题，确实是一个高频的面试题。该问题主要是考察求职者对Kubernetes核心概念和工作原理的了解情况。此外，在生产环境中，部署和管理Pod可能会遇到各种问题，知道创建Pod的完整流程，有助于求职者在遇到问题时，依据流程中各个环节的特点和可能出现的错误，快速定位问题所在，并提出有效的解决方案。 通过Pod定义文件创建Pod假如">
+<meta property="og:description" content="一日特种兵，奇袭武功山因我想去其他城市看看，又没有什么时间。不请假，适合在周末的时间久可以去的，我想到了武功山。不止一个人和我推荐过武功山，但是也没听他们说出个什么理由来，最后只知道了武功山很高很难爬，很有调整性，值得去看看。好吧，于是我打算这个周末一个人去爬一下。 为什么是一个人去，因为我是真想挑战一下，看看我能多快登顶。如果我一个人去，我不用等一个大家都认可的时间出发，不用在不必要的地方做过多">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pic1.imgdb.cn/item/67da25c388c538a9b5c05a95.png">
-<meta property="article:published_time" content="2025-03-20T07:28:39.000Z">
-<meta property="article:modified_time" content="2025-03-20T07:34:13.132Z">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67deb6a688c538a9b5c35613.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67debc4388c538a9b5c3585a.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67dec08988c538a9b5c35ac0.png">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67dec10b88c538a9b5c35b7a.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67decb7788c538a9b5c36bfb.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67deca3488c538a9b5c36a48.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67deca6288c538a9b5c36a82.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67dec88888c538a9b5c367d6.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67decb7888c538a9b5c36c01.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67dec8c188c538a9b5c36835.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67decb7888c538a9b5c36c00.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67dec8fe88c538a9b5c3688d.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67dec99388c538a9b5c36973.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67decb7688c538a9b5c36bf9.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67decb7888c538a9b5c36c02.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67decb7788c538a9b5c36bfc.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67decc5688c538a9b5c36d2e.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67decb7788c538a9b5c36bfd.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67decebb88c538a9b5c370b9.jpg">
+<meta property="og:image" content="https://pic1.imgdb.cn/item/67decebb88c538a9b5c370b8.jpg">
+<meta property="article:published_time" content="2025-03-22T12:46:53.000Z">
+<meta property="article:modified_time" content="2025-03-22T15:01:46.688Z">
 <meta property="article:author" content="Charramma">
-<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="旅行">
+<meta property="article:tag" content="生活">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://pic1.imgdb.cn/item/67da25c388c538a9b5c05a95.png">
+<meta name="twitter:image" content="https://pic1.imgdb.cn/item/67deb6a688c538a9b5c35613.jpg">
   
   
   
-  <title>Kubernetes创建Pod的完整流程 - Charramma的赛博自留地</title>
+  <title>一日特种兵，奇袭武功山 - Charramma的赛博自留地</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Kubernetes创建Pod的完整流程"></span>
+            <span id="subtitle" data-typed-text="一日特种兵，奇袭武功山"></span>
           
         </div>
 
@@ -225,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-20 15:28" pubdate>
-          2025年3月20日 下午
+        <time datetime="2025-03-22 20:46" pubdate>
+          2025年3月22日 晚上
         </time>
       </span>
     
@@ -285,44 +305,75 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Kubernetes创建Pod的完整流程</h1>
+            <h1 id="seo-header">一日特种兵，奇袭武功山</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Kubernetes创建Pod的完整流程"><a href="#Kubernetes创建Pod的完整流程" class="headerlink" title="Kubernetes创建Pod的完整流程"></a>Kubernetes创建Pod的完整流程</h1><p>博主参加过好几次面试都被问到这个问题，确实是一个高频的面试题。该问题主要是考察求职者对Kubernetes核心概念和工作原理的了解情况。此外，在生产环境中，部署和管理Pod可能会遇到各种问题，知道创建Pod的完整流程，有助于求职者在遇到问题时，依据流程中各个环节的特点和可能出现的错误，快速定位问题所在，并提出有效的解决方案。</p>
-<h2 id="通过Pod定义文件创建Pod"><a href="#通过Pod定义文件创建Pod" class="headerlink" title="通过Pod定义文件创建Pod"></a>通过Pod定义文件创建Pod</h2><p>假如create_pod.yaml是一个Pod的定义文件，在用户执行<code>kubectl apply -f create_pod.yaml</code>后，会发生什么？</p>
-<p>首先，kuberctl会解析该文件，验证语法和字段的合法性。然后将Pod定义转换为JSON格式，通过REST API发送给Kubernetes API Server。</p>
-<p>API Server验证用户身份（如Token、证书），检查是否有权限创建Pod。</p>
-<p>然后API Server会将合法的Pod配置写入etcd，确保数据持久化。写入成功后，API Server会触发相应的事件通知，表明有新的 Pod 被创建。这个事件会包含 Pod 的相关信息以及事件类型（如 CREATE 事件）。</p>
-<p>Scheduler在启动时会与API Server建立连接，并通过 watch API 来监听 Pod 资源的变化事件。watch 机制是一种长连接机制，它允许 Scheduler 实时接收 API Server 发送的关于 Pod 资源的各种事件，而无需频繁地发送请求去查询。Scheduler 会向 API Server 发送 watch 请求，指定要监听的资源类型（这里是 Pod）以及感兴趣的事件类型（如创建、更新、删除等）。当 API Server 触发 Pod 创建事件后，会通过 watch 连接将事件发送给 Scheduler。Scheduler 接收到事件后，会对事件进行解析，提取出 Pod 的相关信息。</p>
-<p>Scheduler会对集群中的节点进行筛选和打分：排除不满足条件的节点（比如资源不足、节点标签不匹配、污点容忍等），然后对剩余节点按优先级排序（如资源利用率、亲和性策略等）。选择出合适的节点后，Scheduler将选中的节点信息写入Pod的Binding对象，通过API Server更新到etcd。</p>
-<p>每个节点上的 Kubelet 都会与 API Server 建立连接，并持续监听与该节点相关的 Pod 资源变化。Kubelet 通过 API Server 的 watch 机制，能够实时获取到关于本节点上 Pod 的创建、更新和删除等事件。</p>
-<p>Kubelet会从etcd获取Pod规范，确定Pod需要的容器、存储、网络等信息，然后创建Pod的级别的Linux cgroup和namespace以隔离资源。之后，Kubelet会通知容器运行时（如Docker、containerd等）去镜像仓库拉取所需的镜像，然后创建并启动容器。</p>
-<p>Kubelet通过存活探针、就绪探针等健康检查持续监控容器状态， Pod 运行正常，Kubelet 将状态报告回 API Server，如果 Pod 启动失败，Kubelet 会根据重启策略（RestartPolicy）决定是否重启容器。</p>
-<p>简单来说，Kubernetes创建Pod的过程如下：</p>
-<ol>
-<li>kubectl解析Pod的定义文件，将定义的Pod资源提交给API Server</li>
-<li>API Server进行身份认证和授权后，将Pod的信息存储到etcd中</li>
-<li>Scheduler监视API Server，发现未绑定Node的Pod，然后通过调度策略为该Pod选择合适的Node，将该Pod绑定到目标Node，并通过API Server更新etcd记录。</li>
-<li>目标Node上的Kubelet监视API Server，发现有新分配到本节点的Pod。Kubelet创建Pod级别的资源隔离，然后通知容器运行时去拉取镜像、创建容器。</li>
-<li>Kubelet对Pod进行持续的健康检查，确保其正常运行</li>
-</ol>
-<p>一个简单的示意图：</p>
-<p><img src="https://pic1.imgdb.cn/item/67da25c388c538a9b5c05a95.png" srcset="/img/loading.gif" lazyload alt="Pod 创建流程"></p>
-<p>在Pod创建的不同阶段，Pod的status可能如下情况：</p>
+                <h1 id="一日特种兵，奇袭武功山"><a href="#一日特种兵，奇袭武功山" class="headerlink" title="一日特种兵，奇袭武功山"></a>一日特种兵，奇袭武功山</h1><h2 id="因"><a href="#因" class="headerlink" title="因"></a>因</h2><p>我想去其他城市看看，又没有什么时间。不请假，适合在周末的时间久可以去的，我想到了武功山。不止一个人和我推荐过武功山，但是也没听他们说出个什么理由来，最后只知道了武功山很高很难爬，很有调整性，值得去看看。好吧，于是我打算这个周末一个人去爬一下。</p>
+<p>为什么是一个人去，因为我是真想挑战一下，看看我能多快登顶。如果我一个人去，我不用等一个大家都认可的时间出发，不用在不必要的地方做过多停留。孤独可以让人更专心地做某件事。</p>
+<p>我打算开车过去，但是我还没买车。那就租一辆吧，也就一百五一天。租了辆雪佛兰科鲁泽，后来因为没车，车行给我换成了大众途铠。随便吧，也不是不能开。</p>
+<h2 id="启"><a href="#启" class="headerlink" title="启"></a>启</h2><p>2025年3月22日凌晨五点，我去停车场取车，天还没亮，没有人，也没有店开门，导致我想吃个早餐都不行。</p>
+<p>五点半，我从停车场把车开出去，导航到武功山景区游客服务中心，大概八点半左右到达。停好车后在游客中心附近吃了碗【萍乡炒粉】。就是很普通的鸡蛋炒粉，味道一般，很久没有吃炒粉炒粉了，感觉有点油。</p>
+<p><img src="https://pic1.imgdb.cn/item/67deb6a688c538a9b5c35613.jpg" srcset="/img/loading.gif" lazyload alt="萍乡炒粉"></p>
+<p>之后在游客中心坐免费的大巴到达石鼓寺，这里是登山的起点，索道和徒步都在这里开始。我选择了徒步。</p>
+<h2 id="山"><a href="#山" class="headerlink" title="山"></a>山</h2><p>我是大概9点二十多开始爬的。</p>
+<p>我在石鼓寺花19.9买了个打卡芯片，在买芯片的时候选择路线，在路线中有多个打卡点，都打卡完成可以领一块奖牌。</p>
+<p>我的打算是完全徒步上山，然后坐缆车下山，所以选择的是“特种兵”徒步线。该路线从石鼓寺开始爬，途经猴谷、好汉坡、吊马庄、万宝柜，最后到达金顶。按照官方给的数据，路线大约6KM，约1307M爬升高度，需要大概5-7小时。</p>
+<p>可能是最近一个月都在健身房锻炼，每天爬坡的原因。虽然也感觉很累，但并不是很痛苦，感觉爬不动的那种。有的人爬着爬着，看到前面有凳子可以坐，就会在那里坐着休息很久。而我基本上没怎么正经歇过，我会在心跳特别厉害的时候稍微停一会儿，然后等心跳稍缓一点时我又可以继续冲刺，所以我爬得是比较快的。我从石鼓寺到猴谷我用了一个小时，中间几个打卡点都只用了不到半小时，从万宝柜到金顶花的时间稍长一点，用了33分钟。因为我到万宝柜的时间已经是11点了，早上吃的炒粉也消化得差不多了，确实也有点体力不支，包里带的补给还没吃过，一路上只喝了水，所以中途停下来吃了点东西。</p>
+<p>我到万宝柜的时候发现打卡机无法打卡，听旁边补给点的大爷说是因为没有网络。等我到了金顶，发现打卡机都没开机。顿时感觉被骗了，花二十块买了块没用的塑料牌牌。最后我找到了客服，幸好我有拍照留下证据和到达时间证明，客服帮我把数据补上了。</p>
+<p>最终花了两小时四十分钟登顶，挑战成功。</p>
+<p>之后在山上歇了会儿，一点多左右，准备下山。</p>
+<p>下山也要走比较长的一段路，坐两段索道，没啥特别值得说的。大概三点左右到山脚下游客中心。</p>
+<p><img src="https://pic1.imgdb.cn/item/67debc4388c538a9b5c3585a.jpg" srcset="/img/loading.gif" lazyload alt="打卡记录.jpg"></p>
+<p>大概是这么个路线：</p>
+<p><img src="https://pic1.imgdb.cn/item/67dec08988c538a9b5c35ac0.png" srcset="/img/loading.gif" lazyload alt="路线.png"></p>
+<p><strong>放一些路上拍的照片：</strong></p>
+<p>下山后补拍的大门</p>
+<p><img src="https://pic1.imgdb.cn/item/67dec10b88c538a9b5c35b7a.jpg" srcset="/img/loading.gif" lazyload alt="下山后补拍的大门.jpg"></p>
+<p>下山后补拍的石鼓寺</p>
+<p><img src="https://pic1.imgdb.cn/item/67decb7788c538a9b5c36bfb.jpg" srcset="/img/loading.gif" lazyload alt="下山后补拍的石鼓寺"></p>
+<p>花</p>
+<p><img src="https://pic1.imgdb.cn/item/67deca3488c538a9b5c36a48.jpg" srcset="/img/loading.gif" lazyload alt="花1.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/67deca6288c538a9b5c36a82.jpg" srcset="/img/loading.gif" lazyload alt="花2.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/67dec88888c538a9b5c367d6.jpg" srcset="/img/loading.gif" lazyload alt="花3.jpg"></p>
+<p>山</p>
+<p><img src="https://pic1.imgdb.cn/item/67decb7888c538a9b5c36c01.jpg" srcset="/img/loading.gif" lazyload alt="山1.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/67dec8c188c538a9b5c36835.jpg" srcset="/img/loading.gif" lazyload alt="山2.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/67decb7888c538a9b5c36c00.jpg" srcset="/img/loading.gif" lazyload alt="山3.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/67dec8fe88c538a9b5c3688d.jpg" srcset="/img/loading.gif" lazyload alt="山4.jpg"></p>
+<p>俯瞰</p>
+<p><img src="https://pic1.imgdb.cn/item/67dec99388c538a9b5c36973.jpg" srcset="/img/loading.gif" lazyload alt="俯瞰.jpg"></p>
+<p>龟</p>
+<p><img src="https://pic1.imgdb.cn/item/67decb7688c538a9b5c36bf9.jpg" srcset="/img/loading.gif" lazyload alt="龟.jpg"></p>
+<p>武功山&#x2F;金顶石碑</p>
+<p><img src="https://pic1.imgdb.cn/item/67decb7888c538a9b5c36c02.jpg" srcset="/img/loading.gif" lazyload alt="武功山碑.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/67decb7788c538a9b5c36bfc.jpg" srcset="/img/loading.gif" lazyload alt="金顶.jpg"></p>
+<p>大拳头</p>
+<p><img src="https://pic1.imgdb.cn/item/67decc5688c538a9b5c36d2e.jpg" srcset="/img/loading.gif" lazyload alt="大拳头.jpg"></p>
+<p>草甸与登山者</p>
+<p><img src="https://pic1.imgdb.cn/item/67decb7788c538a9b5c36bfd.jpg" srcset="/img/loading.gif" lazyload alt="草甸与登山者.jpg"></p>
+<h2 id="食"><a href="#食" class="headerlink" title="食"></a>食</h2><p>下山后肚子又饿了，打算去萍乡市里吃莲花血鸭和萍乡小炒肉。在大众点评找了一家评分还不错的店，驱车四十多公里到点里，点了这两个招牌菜。</p>
+<p>莲花血鸭鸭肉切切得很碎，骨头比较多，没什么肉，我感觉不如永州血鸭。萍乡小炒肉和湖南小炒肉不是一个流派的，萍乡小炒肉用的不是鲜辣椒而是辣椒面，放了芹菜，汤汁比较多，味道可以，比较下饭。</p>
+<p><img src="https://pic1.imgdb.cn/item/67decebb88c538a9b5c370b9.jpg" srcset="/img/loading.gif" lazyload alt="莲花血鸭.jpg"></p>
+<p><img src="https://pic1.imgdb.cn/item/67decebb88c538a9b5c370b8.jpg" srcset="/img/loading.gif" lazyload alt="萍乡小炒肉.jpg"></p>
+<h2 id="钱"><a href="#钱" class="headerlink" title="钱"></a>钱</h2><p>2025年3月22日消费:</p>
 <ul>
-<li><code>Pending</code>：这个状态表示 Pod 的 API 对象已经被成功创建，并存储在 <code>etcd</code> 中，但 Pod 内的所有容器还没有运行</li>
-<li><code>ContainerCreating</code>：属于Pending的子状态。Pod 已被调度到某个节点，但 Kubelet 还在准备容器运行环境，容器还没启动。</li>
-<li><code>ErrImagePull</code>：镜像拉取失败</li>
-<li><code>ImagePullBackOff</code>：该状态通常是 <code>ErrImagePull</code> 的后续状态，表示 Kubelet 继续尝试拉取镜像，但依然失败。</li>
-<li><code>Running</code>：Pod的所有必须的容器都已经成功启动（即使就绪探针可能还没通过，Pod还不能接收流量）</li>
-<li><code>CrashLoopBackOff</code>：Pod中的某个容器不断崩溃并被Kubelet重启，导致反复失败。</li>
-<li><code>Unknown</code>：API Server无法与Kubelet通信，无法获取Pod的状态。</li>
-<li><code>Failed</code>：Pod中的所有容器都已退出，但至少有一个容器的退出码非0，表示容器异常终止。</li>
+<li>租车：148</li>
+<li>加油：200.92</li>
+<li>高速费：120</li>
+<li>停车费：15</li>
+<li>补给：46</li>
+<li>早餐：15</li>
+<li>晚餐：118</li>
+<li>打卡芯片：19.9</li>
+<li>金顶索道下行：25</li>
+<li>中庵索道下行：50</li>
+<li>徒步门票：70</li>
+<li>保险：2</li>
+<li>登山竹棍：2</li>
+<li>合计：831.82</li>
 </ul>
-<h2 id="通过Controller创建的Pod"><a href="#通过Controller创建的Pod" class="headerlink" title="通过Controller创建的Pod"></a>通过Controller创建的Pod</h2><p>通常在生产环境中，不会直接通过Pod的定义文件来创建一个“裸”的Pod，而是通过Controller（比如Deployment）来管理Pod的生命周期。那么两种创建Pod的过程是否存在区别？</p>
-<p>关键差异点在于，当Deployment的定义发送到API Server后，相关Controller Manager通过watch机制监听到需要创建的Controller资源并创建Controller。然后又Controller来提交需要创建的Pod的信息给API Server。最后Pod 的创建和运行流程（Scheduler + kubelet）与直接通过Pod的定义文件来创建是相同的。</p>
 
                 
               </div>
@@ -341,8 +392,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/kubernetes/" class="category-chain-item">kubernetes</a>
+  <a href="/categories/%E6%97%85%E8%A1%8C/" class="category-chain-item">旅行</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E6%97%85%E8%A1%8C/%E7%94%9F%E6%B4%BB/" class="category-chain-item">生活</a>
+  
+  
+
   
 
       </span>
@@ -356,7 +414,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/kubernetes/" class="print-no-link">#kubernetes</a>
+        <a href="/tags/%E6%97%85%E8%A1%8C/" class="print-no-link">#旅行</a>
+      
+        <a href="/tags/%E7%94%9F%E6%B4%BB/" class="print-no-link">#生活</a>
       
     </div>
   
@@ -370,18 +430,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/22/%E4%B8%80%E6%97%A5%E7%89%B9%E7%A7%8D%E5%85%B5%EF%BC%8C%E5%A5%87%E8%A2%AD%E6%AD%A6%E5%8A%9F%E5%B1%B1/" title="一日特种兵，奇袭武功山">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">一日特种兵，奇袭武功山</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/03/17/%E5%AE%B9%E5%99%A8%E6%97%A0shell%E6%97%B6%E5%A6%82%E4%BD%95%E6%B5%8B%E8%AF%95%E5%A4%96%E7%BD%91/" title="容器无shell时如何测试外网">
-                        <span class="hidden-mobile">容器无shell时如何测试外网</span>
+                      <a href="/2025/03/20/Kubernetes%E5%88%9B%E5%BB%BAPod%E7%9A%84%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B/" title="Kubernetes创建Pod的完整流程">
+                        <span class="hidden-mobile">Kubernetes创建Pod的完整流程</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
