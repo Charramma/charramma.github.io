@@ -1,0 +1,709 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/touxiang.jpg">
+  <link rel="icon" href="/img/touxiang.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#b3b3b3">
+  <meta name="author" content="Charramma">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一个好用的Python模块：loguru一、Python日志处理1. Python标准库中的日志模块在Python项目开发中，如果涉及到日志处理，通常可以使用Python标准库中的logging模块来实现，但是logging模块的语法稍显复杂，通常需要手动组装各个组件。 比如下面这段示例代码： 12345678910import logging# 需要手动组装各个组件logger &#x3D; loggin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个好用的Python模块：loguru">
+<meta property="og:url" content="http://example.com/2025/03/29/%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84Python%E6%A8%A1%E5%9D%97%EF%BC%9Aloguru/index.html">
+<meta property="og:site_name" content="Charramma的赛博自留地">
+<meta property="og:description" content="一个好用的Python模块：loguru一、Python日志处理1. Python标准库中的日志模块在Python项目开发中，如果涉及到日志处理，通常可以使用Python标准库中的logging模块来实现，但是logging模块的语法稍显复杂，通常需要手动组装各个组件。 比如下面这段示例代码： 12345678910import logging# 需要手动组装各个组件logger &#x3D; loggin">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-29T13:28:05.000Z">
+<meta property="article:modified_time" content="2025-03-29T14:16:19.594Z">
+<meta property="article:author" content="Charramma">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>一个好用的Python模块：loguru - Charramma的赛博自留地</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Charramma的赛博自留地</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="一个好用的Python模块：loguru"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-29 21:28" pubdate>
+          2025年3月29日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">一个好用的Python模块：loguru</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一个好用的Python模块：loguru"><a href="#一个好用的Python模块：loguru" class="headerlink" title="一个好用的Python模块：loguru"></a>一个好用的Python模块：loguru</h1><h2 id="一、Python日志处理"><a href="#一、Python日志处理" class="headerlink" title="一、Python日志处理"></a>一、Python日志处理</h2><h3 id="1-Python标准库中的日志模块"><a href="#1-Python标准库中的日志模块" class="headerlink" title="1. Python标准库中的日志模块"></a>1. Python标准库中的日志模块</h3><p>在Python项目开发中，如果涉及到日志处理，通常可以使用Python标准库中的logging模块来实现，但是logging模块的语法稍显复杂，通常需要手动组装各个组件。</p>
+<p>比如下面这段示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> logging<br><br><span class="hljs-comment"># 需要手动组装各个组件</span><br>logger = logging.getLogger(__name__)<br>handler = logging.StreamHandler()<br>formatter = logging.Formatter(<span class="hljs-string">&#x27;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#x27;</span>)<br>handler.setFormatter(formatter)<br>logger.addHandler(handler)<br><br>logger.info(<span class="hljs-string">&quot;这是一条日志信息&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>开发者需要理解Handler、Formatter、Filter等概念，且默认不记录异常堆栈，多模块管理也较为笨拙。</p>
+<h3 id="2-另一种日志处理方式"><a href="#2-另一种日志处理方式" class="headerlink" title="2. 另一种日志处理方式"></a>2. 另一种日志处理方式</h3><p>Loguru 是一个用于 Python 的第三方日志记录库，旨在简化日志记录过程，同时提供强大的功能。对比logging模块，Loguru通过极简的API可以实现开箱即用。</p>
+<p>GitHub地址：<a target="_blank" rel="noopener" href="https://github.com/Delgan/loguru">https://github.com/Delgan/loguru</a></p>
+<p>Loguru模块具有如下优势特性：</p>
+<ul>
+<li>零成本启动：无需配置立即记录日志</li>
+<li>异常智能捕获：自动附加上下文信息</li>
+<li>结构化支持：原生兼容JSON格式</li>
+<li>线程安全：内置协程&#x2F;多线程支持</li>
+<li>生态友好：无缝对接标准logging模块</li>
+</ul>
+<p><strong>安装Loguru模块</strong></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">pip <span class="hljs-keyword">install</span> loguru<br></code></pre></td></tr></table></figure>
+
+<p><strong>基本使用方法</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> loguru <span class="hljs-keyword">import</span> logger<br><br>logger.debug(<span class="hljs-string">&quot;这是一个调试信息&quot;</span>)<br>logger.info(<span class="hljs-string">&quot;这是一个信息&quot;</span>)<br>logger.warning(<span class="hljs-string">&quot;这是一个警告&quot;</span>)<br>logger.error(<span class="hljs-string">&quot;这是一个错误&quot;</span>)<br>logger.critical(<span class="hljs-string">&quot;这是一个严重错误&quot;</span>)<br><br><span class="hljs-comment"># 指定输出到文件或控制台</span><br>logger.add(<span class="hljs-string">&quot;file.log&quot;</span>, level=<span class="hljs-string">&quot;INFO&quot;</span>)	<span class="hljs-comment"># 输出到文件</span><br>logger.add(sys.stdout, level=<span class="hljs-string">&quot;ERROR&quot;</span>)	<span class="hljs-comment"># 输出到控制台</span><br></code></pre></td></tr></table></figure>
+
+<p>输出示例：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">2025</span>-<span class="hljs-number">03</span>-<span class="hljs-number">29</span> <span class="hljs-number">19</span>:<span class="hljs-number">57</span>:<span class="hljs-number">44</span>.<span class="hljs-number">506</span> | DEBUG    | __main__:&lt;module&gt;:<span class="hljs-number">3</span> - 这是一个调试信息<br></code></pre></td></tr></table></figure>
+
+<h2 id="二、Loguru的配置与定制"><a href="#二、Loguru的配置与定制" class="headerlink" title="二、Loguru的配置与定制"></a>二、Loguru的配置与定制</h2><h3 id="1-add-方法详解"><a href="#1-add-方法详解" class="headerlink" title="1. add()方法详解"></a>1. add()方法详解</h3><p>参数列表说明：</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数名</th>
+<th align="left">类型</th>
+<th align="left">默认值</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">sink</td>
+<td align="left">str&#x2F;object</td>
+<td align="left">-</td>
+<td align="left">输出目标：文件路径、sys.stdout、自定义函数等</td>
+</tr>
+<tr>
+<td align="left">format</td>
+<td align="left">str</td>
+<td align="left">默认格式</td>
+<td align="left">使用{}占位符的格式化字符串</td>
+</tr>
+<tr>
+<td align="left">level</td>
+<td align="left">str&#x2F;int</td>
+<td align="left">“DEBUG”</td>
+<td align="left">记录级别：TRACE(5)&#x2F;DEBUG(10)&#x2F;INFO(20)&#x2F;SUCCESS(25)&#x2F;WARNING(30)&#x2F;ERROR(40)&#x2F;CRITICAL(50)</td>
+</tr>
+<tr>
+<td align="left">rotation</td>
+<td align="left">str&#x2F;int</td>
+<td align="left">None</td>
+<td align="left">轮转条件：”500 MB” &#x2F; “1 week” &#x2F; “00:00”等</td>
+</tr>
+<tr>
+<td align="left">retention</td>
+<td align="left">str&#x2F;int</td>
+<td align="left">None</td>
+<td align="left">保留策略：”30 days” &#x2F; 10（保留最近10个文件）</td>
+</tr>
+<tr>
+<td align="left">compression</td>
+<td align="left">str</td>
+<td align="left">None</td>
+<td align="left">压缩格式：”zip”&#x2F;“gz”&#x2F;“tar”</td>
+</tr>
+<tr>
+<td align="left">enqueue</td>
+<td align="left">bool</td>
+<td align="left">False</td>
+<td align="left">启用异步队列写入，保证多线程安全</td>
+</tr>
+</tbody></table>
+<p>示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs Python"><span class="hljs-comment"># file_logging.py</span><br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">from</span> loguru <span class="hljs-keyword">import</span> logger<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">configure_logging</span>():<br>    <span class="hljs-comment"># 清除默认配置</span><br>    logger.remove()<br>    <br>    <span class="hljs-comment"># 控制台配置</span><br>    logger.add(<br>        sink=sys.stderr,<br>        <span class="hljs-built_in">format</span>=<span class="hljs-string">&quot;&lt;green&gt;&#123;time:YYYY-MM-DD HH:mm:ss&#125;&lt;/green&gt; | &lt;level&gt;&#123;level: &lt;8&#125;&lt;/level&gt; | &lt;cyan&gt;&#123;name&#125;&lt;/cyan&gt;:&lt;cyan&gt;&#123;function&#125;&lt;/cyan&gt;:&lt;cyan&gt;&#123;line&#125;&lt;/cyan&gt; - &lt;level&gt;&#123;message&#125;&lt;/level&gt;&quot;</span>,<br>        level=<span class="hljs-string">&quot;INFO&quot;</span><br>    )<br>    <br>    <span class="hljs-comment"># 文件配置</span><br>    logger.add(<br>        sink=<span class="hljs-string">&quot;app.log&quot;</span>,<br>        rotation=<span class="hljs-string">&quot;500 MB&quot;</span>,    <span class="hljs-comment"># 单个文件最大500MB</span><br>        retention=<span class="hljs-string">&quot;30 days&quot;</span>,   <span class="hljs-comment"># 保留30天日志</span><br>        compression=<span class="hljs-string">&quot;zip&quot;</span>,     <span class="hljs-comment"># 使用zip压缩旧日志</span><br>        enqueue=<span class="hljs-literal">True</span>,          <span class="hljs-comment"># 线程安全</span><br>        <span class="hljs-built_in">format</span>=<span class="hljs-string">&quot;&#123;time:YYYY-MM-DD HH:mm:ss&#125; | &#123;level&#125; | &#123;message&#125;&quot;</span>,<br>        level=<span class="hljs-string">&quot;DEBUG&quot;</span><br>    )<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    logger.debug(<span class="hljs-string">&quot;调试信息（文件可见）&quot;</span>)<br>    logger.info(<span class="hljs-string">&quot;用户登录成功&quot;</span>)<br>    logger.warning(<span class="hljs-string">&quot;接口响应时间超过2秒&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    configure_logging()<br>    main()<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-结构化日志实践"><a href="#2-结构化日志实践" class="headerlink" title="2. 结构化日志实践"></a>2. 结构化日志实践</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 配置JSON格式输出</span><br>logger.add(<span class="hljs-string">&quot;structured.log&quot;</span>, <br>           <span class="hljs-built_in">format</span>=<span class="hljs-string">&quot;&#123;extra[json]&#125;&quot;</span>, <br>           serialize=<span class="hljs-literal">True</span>)  <span class="hljs-comment"># 自动序列化为JSON</span><br><br><span class="hljs-comment"># 带上下文的日志记录</span><br>logger.bind(user_id=<span class="hljs-number">42</span>, action=<span class="hljs-string">&quot;login&quot;</span>).info(<span class="hljs-string">&quot;用户操作&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs css">&#123;<br>    &quot;<span class="hljs-selector-tag">text</span>&quot;: <span class="hljs-string">&quot;用户操作&quot;</span>,<br>    <span class="hljs-string">&quot;level&quot;</span>: <span class="hljs-string">&quot;INFO&quot;</span>,<br>    <span class="hljs-string">&quot;timestamp&quot;</span>: <span class="hljs-string">&quot;2025-03-29T19:20:15.123456&quot;</span>,<br>    <span class="hljs-string">&quot;user_id&quot;</span>: <span class="hljs-number">42</span>,<br>    <span class="hljs-string">&quot;action&quot;</span>: <span class="hljs-string">&quot;login&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="三、进阶：高进功能解析"><a href="#三、进阶：高进功能解析" class="headerlink" title="三、进阶：高进功能解析"></a>三、进阶：高进功能解析</h2><h3 id="1-异常处理"><a href="#1-异常处理" class="headerlink" title="1. 异常处理"></a>1. 异常处理</h3><p>通常有三种方式对异常进行处理</p>
+<p><strong>方式一：自动捕获装饰器</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">@logger.catch(<span class="hljs-params"></span></span><br><span class="hljs-params"><span class="hljs-meta">    level=<span class="hljs-string">&#x27;ERROR&#x27;</span>,       <span class="hljs-comment"># 捕获级别</span></span></span><br><span class="hljs-params"><span class="hljs-meta">    exclude=(<span class="hljs-params">ValueError,</span>),  <span class="hljs-comment"># 排除特定异常</span></span></span><br><span class="hljs-params"><span class="hljs-meta">    default=<span class="hljs-literal">None</span>        <span class="hljs-comment"># 异常时返回值</span></span></span><br><span class="hljs-params"><span class="hljs-meta"></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">process_data</span>():<br>    <span class="hljs-comment"># 自动记录所有未捕获异常</span><br>    risky_operation()<br></code></pre></td></tr></table></figure>
+
+<p><strong>方式二：手动记录上下文</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">try</span>:<br>    parse_input()<br><span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>    logger.opt(<br>        exception=e,      <span class="hljs-comment"># 附加异常对象</span><br>        lazy=<span class="hljs-literal">True</span>,        <span class="hljs-comment"># 延迟求值</span><br>        record=<span class="hljs-literal">True</span>       <span class="hljs-comment"># 访问原始记录</span><br>    ).error(<span class="hljs-string">&quot;处理失败 | 输入数据：&#123;&#125;&quot;</span>, raw_data)<br></code></pre></td></tr></table></figure>
+
+<p><strong>方式三：自定义异常格式</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">exception_formatter</span>(<span class="hljs-params">record</span>):<br>    exception = record[<span class="hljs-string">&quot;exception&quot;</span>]<br>    <span class="hljs-keyword">if</span> exception:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;❗EXCEPTION <span class="hljs-subst">&#123;exception.<span class="hljs-built_in">type</span>&#125;</span>: <span class="hljs-subst">&#123;exception.value&#125;</span>&quot;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span><br><br>logger.add(sys.stderr, <span class="hljs-built_in">format</span>=exception_formatter)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>一个完整的示例代码，演示三种异常处理的方式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> loguru <span class="hljs-keyword">import</span> logger<br><span class="hljs-keyword">import</span> sys<br><br><span class="hljs-comment"># 方式一：自动捕获装饰器</span><br><span class="hljs-meta">@logger.catch(<span class="hljs-params"></span></span><br><span class="hljs-params"><span class="hljs-meta">    level=<span class="hljs-string">&#x27;ERROR&#x27;</span>,       <span class="hljs-comment"># 捕获级别</span></span></span><br><span class="hljs-params"><span class="hljs-meta">    exclude=(<span class="hljs-params">ValueError,</span>),  <span class="hljs-comment"># 排除特定异常</span></span></span><br><span class="hljs-params"><span class="hljs-meta">    default=<span class="hljs-literal">None</span>        <span class="hljs-comment"># 异常时返回值</span></span></span><br><span class="hljs-params"><span class="hljs-meta"></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">process_data</span>():<br>    <span class="hljs-comment"># 自动记录所有未捕获异常</span><br>    risky_operation()<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">risky_operation</span>():<br>    <span class="hljs-comment"># 可能会抛出异常的操作</span><br>    <span class="hljs-keyword">raise</span> RuntimeError(<span class="hljs-string">&quot;Something went wrong!&quot;</span>)<br><br><span class="hljs-comment"># 方式二：手动记录上下文</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">parse_input</span>(<span class="hljs-params">raw_data</span>):<br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-comment"># 可能会抛出异常的代码</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> raw_data:<br>            <span class="hljs-keyword">raise</span> ValueError(<span class="hljs-string">&quot;Empty input data&quot;</span>)<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">int</span>(raw_data)<br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        <span class="hljs-comment"># 手动记录异常</span><br>        logger.opt(<br>            exception=e,      <span class="hljs-comment"># 附加异常对象</span><br>            lazy=<span class="hljs-literal">True</span>,        <span class="hljs-comment"># 延迟求值</span><br>            record=<span class="hljs-literal">True</span>       <span class="hljs-comment"># 访问原始记录</span><br>        ).error(<span class="hljs-string">&quot;处理失败 | 输入数据：&#123;&#125;&quot;</span>, raw_data)<br>        <span class="hljs-keyword">raise</span>  <span class="hljs-comment"># 重新抛出异常</span><br><br><span class="hljs-comment"># 方式三：自定义异常格式</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">exception_formatter</span>(<span class="hljs-params">record</span>):<br>    exception = record[<span class="hljs-string">&quot;exception&quot;</span>]<br>    <span class="hljs-keyword">if</span> exception:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;❗EXCEPTION <span class="hljs-subst">&#123;exception.<span class="hljs-built_in">type</span>&#125;</span>: <span class="hljs-subst">&#123;exception.value&#125;</span>&quot;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span><br><br><span class="hljs-comment"># 添加自定义格式的处理器</span><br>logger.add(sys.stderr, <span class="hljs-built_in">format</span>=exception_formatter)<br><br><span class="hljs-comment"># 测试代码</span><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    <span class="hljs-comment"># 测试方式一</span><br>    logger.info(<span class="hljs-string">&quot;开始测试自动捕获装饰器&quot;</span>)<br>    <span class="hljs-keyword">try</span>:<br>        result = process_data()<br>        logger.success(<span class="hljs-string">&quot;方式一测试成功&quot;</span>)<br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        logger.error(<span class="hljs-string">&quot;方式一测试失败：&#123;&#125;&quot;</span>, e)<br>    <br>    <span class="hljs-comment"># 测试方式二</span><br>    logger.info(<span class="hljs-string">&quot;开始测试手动记录上下文&quot;</span>)<br>    raw_data = <span class="hljs-string">&quot;invalid&quot;</span><br>    <span class="hljs-keyword">try</span>:<br>        parse_input(raw_data)<br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        logger.error(<span class="hljs-string">&quot;方式二测试捕获到异常：&#123;&#125;&quot;</span>, e)<br>    <br>    <span class="hljs-comment"># 测试方式三</span><br>    logger.info(<span class="hljs-string">&quot;开始测试自定义异常格式&quot;</span>)<br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">raise</span> KeyError(<span class="hljs-string">&quot;自定义异常测试&quot;</span>)<br>    <span class="hljs-keyword">except</span> Exception:<br>        logger.opt(exception=<span class="hljs-literal">True</span>).error(<span class="hljs-string">&quot;自定义格式测试&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-动态上下文管理"><a href="#2-动态上下文管理" class="headerlink" title="2. 动态上下文管理"></a>2. 动态上下文管理</h3><p><strong>临时上下文</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">with</span> logger.contextualize(session_id=<span class="hljs-string">&quot;A1B2C3&quot;</span>):<br>    logger.info(<span class="hljs-string">&quot;开始处理请求&quot;</span>)  <span class="hljs-comment"># 自动携带session_id</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>全局绑定</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 配置全局上下文</span><br>logger.configure(extra=&#123;<span class="hljs-string">&quot;hostname&quot;</span>: get_hostname()&#125;)<br><br><span class="hljs-comment"># 所有日志自动包含hostname</span><br>logger.info(<span class="hljs-string">&quot;系统状态正常&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>动态更新</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">tracker = logger.bind(progress=<span class="hljs-number">0</span>)<br>tracker.info(<span class="hljs-string">&quot;任务启动&quot;</span>)<br>tracker.bind(progress=<span class="hljs-number">50</span>).info(<span class="hljs-string">&quot;处理中&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>一个完整的示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> loguru <span class="hljs-keyword">import</span> logger<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> uuid<br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-comment"># 模拟获取主机名的函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_hostname</span>():<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;server-001&quot;</span><br><br><span class="hljs-comment"># 模拟获取用户ID的函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_user_id</span>():<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">str</span>(uuid.uuid4())<br><br><span class="hljs-comment"># 模拟长时间运行的任务</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">long_running_task</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):<br>        time.sleep(<span class="hljs-number">0.5</span>)<br>        logger.info(<span class="hljs-string">f&quot;任务进度: <span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>&#125;</span>/3&quot;</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;任务完成&quot;</span><br><br><span class="hljs-comment"># 模拟处理请求的函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">handle_request</span>():<br>    session_id = <span class="hljs-built_in">str</span>(uuid.uuid4())<br>    <span class="hljs-keyword">with</span> logger.contextualize(session_id=session_id):<br>        logger.info(<span class="hljs-string">&quot;开始处理请求&quot;</span>)<br>        <span class="hljs-keyword">try</span>:<br>            result = long_running_task()<br>            logger.info(<span class="hljs-string">&quot;任务完成: &#123;&#125;&quot;</span>, result)<br>        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>            logger.error(<span class="hljs-string">&quot;处理请求时出错: &#123;&#125;&quot;</span>, e)<br>        <span class="hljs-keyword">finally</span>:<br>            logger.info(<span class="hljs-string">&quot;结束处理请求&quot;</span>)<br><br><span class="hljs-comment"># 模拟处理用户请求的函数</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">handle_user_request</span>():<br>    user_id = get_user_id()<br>    <span class="hljs-keyword">with</span> logger.contextualize(user_id=user_id):<br>        logger.info(<span class="hljs-string">&quot;开始处理用户请求&quot;</span>)<br>        <span class="hljs-keyword">try</span>:<br>            result = long_running_task()<br>            logger.info(<span class="hljs-string">&quot;用户任务完成: &#123;&#125;&quot;</span>, result)<br>        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>            logger.error(<span class="hljs-string">&quot;处理用户请求时出错: &#123;&#125;&quot;</span>, e)<br>        <span class="hljs-keyword">finally</span>:<br>            logger.info(<span class="hljs-string">&quot;结束处理用户请求&quot;</span>)<br><br><span class="hljs-comment"># 配置日志格式，显示上下文信息</span><br>logger.remove()  <span class="hljs-comment"># 移除默认的控制台输出</span><br>logger.add(sys.stderr, <span class="hljs-built_in">format</span>=<span class="hljs-string">&quot;&lt;green&gt;&#123;time&#125;&lt;/green&gt; | &lt;level&gt;&#123;level&#125;&lt;/level&gt; | &lt;cyan&gt;&#123;name&#125;&lt;/cyan&gt;:&lt;cyan&gt;&#123;function&#125;&lt;/cyan&gt;:&lt;cyan&gt;&#123;line&#125;&lt;/cyan&gt; | &#123;extra&#125; | &#123;message&#125;&quot;</span>)<br><br><span class="hljs-comment"># 配置全局上下文</span><br>logger.configure(extra=&#123;<span class="hljs-string">&quot;hostname&quot;</span>: get_hostname()&#125;)<br><br><span class="hljs-comment"># 动态更新上下文的示例</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">dynamic_context_demo</span>():<br>    tracker = logger.bind(progress=<span class="hljs-number">0</span>)<br>    tracker.info(<span class="hljs-string">&quot;任务启动&quot;</span>)<br>    <br>    <span class="hljs-keyword">for</span> progress <span class="hljs-keyword">in</span> [<span class="hljs-number">25</span>, <span class="hljs-number">50</span>, <span class="hljs-number">75</span>, <span class="hljs-number">100</span>]:<br>        time.sleep(<span class="hljs-number">0.5</span>)<br>        tracker = tracker.bind(progress=progress)<br>        tracker.info(<span class="hljs-string">f&quot;任务进度更新: <span class="hljs-subst">&#123;progress&#125;</span>%&quot;</span>)<br>    <br>    tracker.info(<span class="hljs-string">&quot;任务完成&quot;</span>)<br><br><span class="hljs-comment"># 测试代码</span><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    <span class="hljs-comment"># 测试临时上下文</span><br>    logger.info(<span class="hljs-string">&quot;开始测试临时上下文&quot;</span>)<br>    <span class="hljs-keyword">with</span> logger.contextualize(request_id=<span class="hljs-string">&quot;REQ-12345&quot;</span>):<br>        handle_request()<br>    logger.info(<span class="hljs-string">&quot;临时上下文测试完成\n&quot;</span>)<br>    <br>    <span class="hljs-comment"># 测试全局绑定</span><br>    logger.info(<span class="hljs-string">&quot;开始测试全局绑定&quot;</span>)<br>    logger.info(<span class="hljs-string">&quot;全局上下文: hostname=&#123;hostname&#125;&quot;</span>, hostname=get_hostname())<br>    handle_user_request()<br>    logger.info(<span class="hljs-string">&quot;全局绑定测试完成\n&quot;</span>)<br>    <br>    <span class="hljs-comment"># 测试动态更新</span><br>    logger.info(<span class="hljs-string">&quot;开始测试动态更新&quot;</span>)<br>    dynamic_context_demo()<br>    logger.info(<span class="hljs-string">&quot;动态更新测试完成&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="四、迁移与集成"><a href="#四、迁移与集成" class="headerlink" title="四、迁移与集成"></a>四、迁移与集成</h2><h3 id="1-与logging兼容"><a href="#1-与logging兼容" class="headerlink" title="1. 与logging兼容"></a>1. 与logging兼容</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> logging<br><span class="hljs-keyword">from</span> loguru <span class="hljs-keyword">import</span> logger<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">LoguruInterceptHandler</span>(logging.Handler):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">emit</span>(<span class="hljs-params">self, record</span>):<br>        <span class="hljs-comment"># 转换日志记录</span><br>        level = logger.level(record.levelname).name<br>        logger.opt(<br>            depth=<span class="hljs-number">6</span>, <br>            exception=record.exc_info<br>        ).log(level, record.getMessage())<br><br><span class="hljs-comment"># 接管标准logging</span><br>logging.basicConfig(handlers=[LoguruInterceptHandler()], level=<span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-与flask集成"><a href="#2-与flask集成" class="headerlink" title="2. 与flask集成"></a>2. 与flask集成</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> g<br><br><span class="hljs-meta">@app.before_request</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">assign_request_id</span>():<br>    g.request_id = generate_uuid()<br>    logger.bind(request_id=g.request_id)<br><br><span class="hljs-meta">@app.after_request</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">log_request</span>(<span class="hljs-params">response</span>):<br>    logger.info(<span class="hljs-string">f&quot;<span class="hljs-subst">&#123;request.method&#125;</span> <span class="hljs-subst">&#123;request.path&#125;</span> - <span class="hljs-subst">&#123;response.status_code&#125;</span>&quot;</span>)<br>    <span class="hljs-keyword">return</span> response<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-与Django集成"><a href="#3-与Django集成" class="headerlink" title="3. 与Django集成"></a>3. 与Django集成</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># settings.py</span><br><span class="hljs-keyword">from</span> loguru <span class="hljs-keyword">import</span> logger<br><br>LOGGING = &#123;<br>    <span class="hljs-string">&#x27;version&#x27;</span>: <span class="hljs-number">1</span>,<br>    <span class="hljs-string">&#x27;disable_existing_loggers&#x27;</span>: <span class="hljs-literal">False</span>,<br>    <span class="hljs-string">&#x27;handlers&#x27;</span>: &#123;<br>        <span class="hljs-string">&#x27;loguru&#x27;</span>: &#123;<br>            <span class="hljs-string">&#x27;class&#x27;</span>: <span class="hljs-string">&#x27;django_loguru.handler.LoguruHandler&#x27;</span>,<br>        &#125;,<br>    &#125;,<br>    <span class="hljs-string">&#x27;loggers&#x27;</span>: &#123;<br>        <span class="hljs-string">&#x27;django&#x27;</span>: &#123;<br>            <span class="hljs-string">&#x27;handlers&#x27;</span>: [<span class="hljs-string">&#x27;loguru&#x27;</span>],<br>            <span class="hljs-string">&#x27;level&#x27;</span>: <span class="hljs-string">&#x27;INFO&#x27;</span>,<br>        &#125;,<br>    &#125;,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Python/" class="print-no-link">#Python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/22/%E4%B8%80%E6%97%A5%E7%89%B9%E7%A7%8D%E5%85%B5%EF%BC%8C%E5%A5%87%E8%A2%AD%E6%AD%A6%E5%8A%9F%E5%B1%B1/" title="一日特种兵，奇袭武功山">
+                        <span class="hidden-mobile">一日特种兵，奇袭武功山</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
